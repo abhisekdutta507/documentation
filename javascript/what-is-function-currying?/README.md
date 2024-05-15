@@ -1,4 +1,8 @@
-### Snippet description
+# What is function currying?
+
+## Function currying is a functional programming technique that involves breaking down a function that takes multiple arguments into a series of functions that take one argument each.
+
+### GUIDE
 
 **function currying** using **bind prototype**.
 

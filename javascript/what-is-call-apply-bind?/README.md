@@ -1,6 +1,19 @@
-### Snippet description of `call`
+# What is call, apply & bind?
 
-**Pass reference of object B** in `getFullName()` of object **A**.
+## `call`, `apply`, and `bind` are the methods in JavaScript that are used to control the execution context (the value of this) of a function.
+
+### GUIDE
+
+1. `call`: This method is used to invoke a function with a specified this value and arguments provided individually. Here's the syntax:
+
+```js
+functionName.call(thisArg, arg1, arg2, ...);
+```
+
+- `thisArg`: The value to be passed as this to the function being called.
+- `arg1, arg2, ...`: Optional arguments to be passed to the function.
+
+#### Example:
 
 ```js
 const personA = {
@@ -11,13 +24,17 @@ const personA = {
     }
 };
 
+personA.getFullName('Kolkata', 'India');
+// Output: Abhisek Dutta lives in Kolkata, India
+```
+
+**Pass reference of object personB** in `getFullName()` of object **personA**.
+
+```js
 const personB = {
     firstName: 'Anyone',
     lastName: 'Dutta'
 };
-
-personA.getFullName('Kolkata', 'India');
-// Output: Abhisek Dutta lives in Kolkata, India
 
 /**
  * @description passing the reference of personB in getFullName()
@@ -26,9 +43,19 @@ personA.getFullName.call(personB, 'Kolkata', 'India');
 // Output: Anyone Dutta lives in Kolkata, India
 ```
 
-### Snippet description of `apply`
+<br>
+<br>
 
-**apply** is very similar to **call**. The only difference is in the **arguments**.
+2. `apply`: **apply** is very similar to **call**. The only difference is in the **arguments** provided as an array. The syntax is:
+
+```js
+functionName.call(thisArg, [arg1, arg2, ...]);
+```
+
+- `thisArg`: The value to be passed as this to the function being called.
+- `[arg1, arg2, ...]`: An array or array-like object containing arguments to be passed to the function.
+
+#### Example:
 
 ```js
 /**
@@ -38,9 +65,19 @@ personA.getFullName.apply(personB, ['Kolkata', 'India']);
 // Output: Anyone Dutta lives in Kolkata, India
 ```
 
-### Snippet description of `bind`
+<br>
+<br>
 
-**bind** instead of calling it creates a new `function`. That we can use in future.
+3. `bind`: **bind** instead of calling it creates a new `function`. That we can use in future. The syntax is:
+
+```js
+const newFunction = functionName.bind(thisArg, arg1, arg2, ...);
+```
+
+- `thisArg`: The value to be passed as `this` to the function when the new function is called.
+- `arg1, arg2, ...`: Optional arguments to be partially applied to the new function.
+
+#### Example:
 
 ```js
 const personC = {
@@ -58,7 +95,7 @@ getFullName_v2();
 // Output: Someone Dutta lives in Kolkata, India
 ```
 
-### With `bind` we can set default arguments
+#### With `bind` we can set default arguments
 
 Setting default arguments with `bind`.
 

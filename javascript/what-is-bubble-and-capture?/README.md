@@ -1,6 +1,8 @@
-This project is created with `HTML`, `CSS` & `JavaScript`.
+# What is bubble & capture?
 
-### Snippet description of `bubble`, `capture` & `propagation`
+## In JavaScript, bubbling and capturing are two phases of event processing that determine the order in which elements receive an event.
+
+### GUIDE
 
 **3 HTML divs** one inside another.
 
@@ -13,6 +15,8 @@ This project is created with `HTML`, `CSS` & `JavaScript`.
   </div>
 </div>
 ```
+
+**UI presentation** of the divs.
 
 ![divs](divs.png)
 
