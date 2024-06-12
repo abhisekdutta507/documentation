@@ -1,12 +1,10 @@
 # What is `this` pointer?
 
-## In JavaScript, the `this` keyword is a reference to the context in which a function is executed.
+In JavaScript, the `this` keyword is a reference to the context in which a function is executed.
 
-### GUIDE
+#### `Global` Context
 
-### `Global` Context
-
-#### When used globally (i.e., outside of any function), `this` refers to the global object, which is `window` in browsers and `global` in Node.js.
+When used globally (i.e., outside of any function), `this` refers to the global object, which is `window` in browsers and `global` in Node.js.
 
 #### Example 1:
 
@@ -18,9 +16,9 @@
 console.log('@logger this is ', this);
 ```
 
-### `Function` Context
+#### `Function` Context
 
-#### When used inside a regular function, the value of `this` depends on how the function is called:
+When used inside a regular function, the value of `this` depends on how the function is called:
 
 #### Example 2:
 
@@ -36,7 +34,7 @@ function whatIsThis() {
 whatIsThis();
 ```
 
-#### We must mention the context before calling the function using `call`, `apply` or `bind`.
+We must mention the context before calling the function using `call`, `apply` or `bind`.
 
 #### Example 3:
 
@@ -54,7 +52,7 @@ const objectA = {
 whatIsThis.call(objectA); // `this` is { name: 'Abhisek Dutta' }
 ```
 
-#### What if we pass `this` from outside while calling the function using `call`.
+What if we pass `this` from outside while calling the function using `call`.
 
 #### Example 4:
 
@@ -68,7 +66,7 @@ function whatIsThis() {
 whatIsThis.call(this); // `this` is {}. Exactly similar to Example 1.
 ```
 
-#### When executed in non-strict mode.
+When executed in non-strict mode.
 
 #### Example 5:
 
@@ -84,7 +82,7 @@ function whatIsThis() {
 whatIsThis();
 ```
 
-#### Let's add some properties using the `this` keyword.
+Let's add some properties using the `this` keyword.
 
 #### Example 6:
 
@@ -103,9 +101,9 @@ function whatIsThis() {
 whatIsThis();
 ```
 
-### `Method` Context
+#### `Method` Context
 
-#### When a function is called as a method of an object, `this` refers to the object on which the method was called.
+When a function is called as a method of an object, `this` refers to the object on which the method was called.
 
 #### Example 7:
 
@@ -120,7 +118,7 @@ const myObject = {
 console.log(myObject.getName()); // Abhisek Dutta
 ```
 
-#### When `this` is used in an `arrow function` then the function will inherit `this` from it's parent scope.
+When `this` is used in an `arrow function` then the function will inherit `this` from it's parent scope.
 
 #### Example 8:
 
@@ -140,7 +138,7 @@ console.log(myObject.getName()); // `this` refers to myObject
 console.log(myObject.getThis()); // `this` refers to Example 1. Either empty object or Window.
 ```
 
-#### When we wrap the above example within a lexical scope then,
+When we wrap the above example within a lexical scope then,
 
 #### Example 9:
 
