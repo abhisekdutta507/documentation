@@ -1,8 +1,8 @@
-# What is call, apply & bind?
+### What is call, apply & bind?
 
-## `call`, `apply`, and `bind` are the methods in JavaScript that are used to control the execution context (the value of this) of a function.
+`call`, `apply`, and `bind` are the methods in JavaScript that are used to control the execution context (the value of this) of a function.
 
-### GUIDE
+#### GUIDE
 
 1. `call`: This method is used to invoke a function with a specified this value and arguments provided individually. Here's the syntax:
 

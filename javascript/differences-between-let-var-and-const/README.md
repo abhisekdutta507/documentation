@@ -1,10 +1,8 @@
-# Differences between let, const & var.
+### Differences between let, const & var.
 
-## In JavaScript, let, const, and var are used to declare variables, but they have different characteristics and scopes.
+In JavaScript, let, const, and var are used to declare variables, but they have different characteristics and scopes.
 
-### GUIDE
-
-### **var**
+#### **var**
 
   * **Scope:**
     * **Function Scope:** Variables declared with `var` within a function are function-scoped. They are only accessible within the function they are declared in.
@@ -16,7 +14,7 @@
   * **Re-declaration:**
     * Variables declared with `var` can be re-declared within the same scope.
 
-#### We can re-declare and use variables declared using `var`.
+We can re-declare and use variables declared using `var`.
 
 ```js
 console.log(age); // Output: undefined
@@ -39,7 +37,7 @@ console.log(multiplyBy2(20)); // Output: 40
 console.log(a); // ReferenceError: a is not defined
 ```
 
-### **let**
+#### **let**
 
   * **Scope:**
     * **Block Scope:** Variables declared with `let` are block-scoped. Meaning they are only accessible within the block (**{}**) they are declared in.
@@ -50,7 +48,7 @@ console.log(a); // ReferenceError: a is not defined
   * **Re-declaration:**
     * Variables declared with `let` cannot be re-declared within the same scope. But we can assign values to them.
 
-#### We cannot re-declare variables declared using `let`. But we can re-assign values to them.
+We cannot re-declare variables declared using `let`. But we can re-assign values to them.
 
 ```js
 function multiplyBy2(_a = 0) {
@@ -76,7 +74,7 @@ function multiplyBy3(_a = 0) {
 console.log(multiplyBy3(20)); // ReferenceError: a is not defined
 ```
 
-### **const**
+#### **const**
 
   * **Scope:**
     * **Block Scope:** Variables declared with `cost` are block-scoped. Meaning they are only accessible within the block (**{}**) they are declared in.
@@ -91,7 +89,7 @@ console.log(multiplyBy3(20)); // ReferenceError: a is not defined
   * **Mutability**
     * The variables do not allow reassignment but it does not make the value immutable. Objects and Arrays declared with `const` can be modified after declaration.
 
-#### We cannot re-assign variables declared using `const`.
+We cannot re-assign variables declared using `const`.
 
 ```js
 function multiplyBy4(_a = 0) {

@@ -1,16 +1,14 @@
-# What is Promise? What are the 3 stages of a Promise?
+### What is Promise? What are the 3 stages of a Promise?
 
-## `Promise` is a way to handle asynchronous operations in JavaScript.
-
-### The 3 stages of a `Promise`:
+In JavaScript, `Promise` is a way of handling asynchronous operations. The 3 stages of a `Promise` are as follows,
 
   * **Pending:** The initial state of a Promise. The operation is still ongoing, and the Promise is neither fulfilled nor rejected.
   * **Fulfilled:** The Promise is completed successfully. It has a resolved value.
   * **Rejected:** The Promise is failed. It has a reason for the failure (error).
 
-### Promise.resolve()
+#### Promise.resolve()
 
-#### Example 1: Resolving with a Value
+Example 1: Resolving with a Value
 
 ```js
 const promise = Promise.resolve(42);
@@ -20,7 +18,7 @@ promise.then((value) => {
 });
 ```
 
-#### Example 2: Resolving with Another Promise
+Example 2: Resolving with Another Promise
 
 ```js
 const originalPromise = new Promise((resolve, reject) => {
@@ -37,7 +35,7 @@ wrappedPromise.then((value) => {
 
 ```
 
-#### Example 3: Resolving with a Thenable
+Example 3: Resolving with a Thenable
 
 ```js
 const thenable = {
@@ -54,9 +52,9 @@ promise.then((value) => {
 
 ```
 
-### Promise.reject()
+#### Promise.reject()
 
-#### Example 1: Rejecting with an Error
+Example 1: Rejecting with an Error
 
 ```js
 const promise = Promise.reject(new Error('Something went wrong'));
@@ -67,7 +65,7 @@ promise.catch((error) => {
 
 ```
 
-#### Example 2: Rejecting with a String
+Example 2: Rejecting with a String
 
 ```js
 const promise = Promise.reject('Error: Operation failed');
@@ -78,7 +76,7 @@ promise.catch((error) => {
 
 ```
 
-#### Example 3: Using `Promise.reject()` in a Function
+Example 3: Using `Promise.reject()` in a Function
 
 ```js
 function fetchData(url) {
@@ -104,9 +102,9 @@ fetchData('http://example.com')
 
 ```
 
-### Promise.race():
+#### Promise.race():
 
-#### Resolves or rejects as soon as one of the promises resolves or rejects.
+Resolves or rejects as soon as one of the promises resolves or rejects.
 
 ```js
 const wait = async (n = 1) => {
@@ -153,13 +151,13 @@ main();
 
 ```
 
-##### Output
+Output
 
 ```shell
 20
 ```
 
-#### If promiseA was executed earliest. Then the output will be different.
+If promiseA was executed earliest. Then the output will be different.
 
 ```shell
 Error: Simple execution error!
@@ -167,9 +165,9 @@ Error: Simple execution error!
     at async main (/index.js:31:22)
 ```
 
-### Promise.all()
+#### Promise.all()
 
-#### Short-circuits and rejects if any promise rejects. All promises must be resolved.
+Short-circuits and rejects if any promise rejects. All promises must be resolved.
 
 ```js
 const wait = async (n = 1) => {
@@ -213,7 +211,7 @@ main();
 
 ```
 
-##### Output
+Output
 
 ```shell
 Error: Simple execution error!
@@ -221,9 +219,9 @@ Error: Simple execution error!
     at async main (/index.js:31:22)
 ```
 
-### Promise.allSettled():
+#### Promise.allSettled():
 
-#### `Promise.allSettled()` is a method in JavaScript that returns a promise when all of the given promises are either resolved or rejected.
+`Promise.allSettled()` is a method in JavaScript that returns a promise when all of the given promises are either resolved or rejected.
 
 ```js
 const wait = async (n = 1) => {
@@ -269,7 +267,7 @@ async function main() {
 main();
 ```
 
-##### Output
+Output
 
 ```shell
 [
@@ -285,9 +283,9 @@ main();
 ]
 ```
 
-### Promise.any():
+#### Promise.any():
 
-#### Resolves as soon as any promise resolves, ignores rejections until all promises reject.
+Resolves as soon as any promise resolves, ignores rejections until all promises reject.
 
 ```js
 const wait = async (n = 1) => {
@@ -334,13 +332,13 @@ main();
 
 ```
 
-##### Output
+Output
 
 ```shell
 10
 ```
 
-#### When all the promises are rejected then
+When all the promises are rejected then
 
 ```js
 async function main() {
@@ -355,7 +353,7 @@ async function main() {
 main();
 ```
 
-##### Output
+Output
 
 ```shell
 [AggregateError: All promises were rejected] {
@@ -382,7 +380,7 @@ main();
 }
 ```
 
-#### When all the promises are resolved then
+When all the promises are resolved then
 
 ```js
 async function main() {
@@ -402,7 +400,7 @@ async function main() {
 main();
 ```
 
-##### Output
+Output
 
 ```shell
 20 # will take 8 sec. but returns the response received earliest.

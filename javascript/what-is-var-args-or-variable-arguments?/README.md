@@ -1,15 +1,13 @@
-# What is var args or variable arguments?
+### What is var args or variable arguments?
 
-## The `variable arguments` (often referred to as `var args`) allow functions to accept a variable number of arguments. There are two main ways to handle variable arguments in JavaScript:
+The `variable arguments` (often referred to as `var args`) allow functions to accept a variable number of arguments. There are two main ways to handle variable arguments in JavaScript:
 
   - Using the **arguments** object
   - Using **ES6 rest parameters**
 
-### Using the **arguments** object:
+#### Using the **arguments** object:
 
-#### The `arguments` object is an array-like object available within all non-arrow functions. It contains all the arguments passed to the function.
-
-#### Example:
+The `arguments` object is an array-like object available within all non-arrow functions. It contains all the arguments passed to the function.
 
 ```js
 function sum() {
@@ -24,11 +22,9 @@ console.log(sum(1, 2, 3, 4)); // Output: 10
 
 ```
 
-### Using **ES6 rest parameters**:
+#### Using **ES6 rest parameters**:
 
-#### Rest parameters provide a more modern and readable way to handle variable arguments.
-
-#### Example:
+Rest parameters provide a more modern and readable way to handle variable arguments.
 
 ```js
 function sum(...numbers) {

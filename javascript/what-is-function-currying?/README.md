@@ -1,10 +1,8 @@
-# What is function currying?
+### What is function currying?
 
-## Function currying is a functional programming technique that involves breaking down a function that takes multiple arguments into a series of functions that take one argument each.
+Function currying is a functional programming technique that involves breaking down a function that takes multiple arguments into a series of functions that take one argument each.
 
-### GUIDE
-
-**function currying** using **bind prototype**.
+#### **function currying** using **bind prototype**.
 
 ```js
 function multiply(x, y) {
@@ -19,11 +17,10 @@ multiply(3, 5);
  */
 const multiplyByFive = multiply.bind(this, 5);
 
-multiplyByFive(2);
-// Output: 10
+multiplyByFive(2); // Output: 10
 ```
 
-**function currying** using **closure**.
+#### **function currying** using **closure**.
 
 ```js
 function multiply(x) {
@@ -36,6 +33,5 @@ function multiply(x) {
 
 const multiplyByFour = multiply(4);
 
-multiplyByFour(5);
-// Output: 20
+multiplyByFour(5); // Output: 20
 ```

@@ -18,8 +18,6 @@ Array.map(callback(currentValue, index, Array), thisArg);
 
 - **Returns a new array**: `map` does not modify the original array; it creates a new array with the transformed elements.
 
-#### Example Usage
-
 #### Basic Example
 
 ```javascript

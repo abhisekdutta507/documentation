@@ -1,8 +1,6 @@
-# What is shallow copy in javascript?
+### What is shallow copy in javascript?
 
-## A shallow copy creates a new object or array and copies the primitive values of the original object or array's properties into it. For non-primitive values (like objects or arrays), it copies the references.
-
-### GUIDE
+A shallow copy creates a new object or array and copies the primitive values of the original object or array's properties into it. For non-primitive values (like objects or arrays), it copies the references.
 
 #### Example:
 

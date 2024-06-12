@@ -1,10 +1,8 @@
-# What is closure? How to create private variables using JavaScript?
+### What is closure? How to create private variables using JavaScript?
 
-## A closure gives you access to an outer function's scope from an inner function.
+A closure gives you access to an outer function's scope from an inner function. JavaScript does not have a native way to create private variables. However, we can achieve that in different ways.
 
-## JavaScript does not have a native way to create private variables. However, there are a several ways that can be used to achieve the scenario.
-
-### GUIDE
+#### GUIDE
 
 1. Using `Closure`: Closures are useful for simple use cases and can be implemented in older JavaScript versions.
 
