@@ -29,7 +29,7 @@ const pageElementSelector: string = "jspdf-page-element";
 
   <!-- every row should have the class pageElementSelector -->
 
-  <!-- row without the class pageElementSelector will be teated as HEADER or FOOTER -->
+  <!-- row without the class pageElementSelector will be treated as HEADER or FOOTER -->
   <Link href="https://cricketperfect.com/the-2011-cricket-world-cup-quiz/" target="_blank" className="underline">The credit goes to cricketperfect.com</Link>
 </div>
 ```
