@@ -1,3 +1,9 @@
+### How to convert a pretty looking HTML template into a PDF file?
+
+We will be using the below mentioned JavaScript plugins to prepare the setup.
+
+- [jsPDF](https://github.com/parallax/jsPDF)
+- [html2canvas](https://html2canvas.hertzen.com/)
 
 #### Prepare the HTML template
 
@@ -156,4 +162,4 @@ Visit [https://abhisekdutta.vercel.app](https://abhisekdutta.vercel.app/experime
 
 #### View the source file
 
-Check the source code [html2pdf.ts](./html2pdf.ts).
+Check the source code here @ [html2pdf.ts](./html2pdf.ts).
