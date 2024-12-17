@@ -63,8 +63,8 @@ export const A4: PageOptions = {
   format: [446.2, 631.4],
   compress: false,
   margin: {
-    narrow: 16,
-    normal: 32,
+    narrow: 26.997,
+    normal: 54.064,
   }
 };
 
@@ -78,8 +78,8 @@ export const Legal: PageOptions = {
   format: [459, 756],
   compress: false,
   margin: {
-    narrow: 16,
-    normal: 32,
+    narrow: 26.997,
+    normal: 54.064,
   }
 };
 
@@ -93,8 +93,8 @@ export const Letter: PageOptions = {
   format: [459, 594],
   compress: false,
   margin: {
-    narrow: 16,
-    normal: 32,
+    narrow: 26.997,
+    normal: 54.064,
   }
 };
 
@@ -136,7 +136,8 @@ const generateMultiPagePDF = async (page: string, pageOptions: PageOptions, sele
       pdf.addPage();
     }
     const convertedImage = page.canvas.toDataURL('image/jpeg', 1);
-    pdf.addImage(convertedImage, 'jpeg', page.margin, page.margin, page.width, page.height);
+    const { left, top } = bestMargin({ pageWidth: pageOptions.format[0], canvasWidth: page.width, margin: page.margin });
+    pdf.addImage(convertedImage, 'jpeg', left, top, page.width, page.height);
   });
   return pdf;
 };

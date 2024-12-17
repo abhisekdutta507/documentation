@@ -21,6 +21,8 @@ interface BalancedPage {
   margin: number;
 }
 
+const BorderWidth = 0;
+
 /**
  * @description A4 page is 20.99 cm x 29.7 cm
  * or 446.2 px x 631.4 px
@@ -31,8 +33,8 @@ export const A4: PageOptions = {
   format: [446.2, 631.4],
   compress: false,
   margin: {
-    narrow: 16,
-    normal: 32,
+    narrow: 26.997,
+    normal: 54.064,
   }
 };
 
@@ -46,8 +48,8 @@ export const Legal: PageOptions = {
   format: [459, 756],
   compress: false,
   margin: {
-    narrow: 16,
-    normal: 32,
+    narrow: 26.997,
+    normal: 54.064,
   }
 };
 
@@ -61,8 +63,8 @@ export const Letter: PageOptions = {
   format: [459, 594],
   compress: false,
   margin: {
-    narrow: 16,
-    normal: 32,
+    narrow: 26.997,
+    normal: 54.064,
   }
 };
 
@@ -72,6 +74,34 @@ const toHTMLElementArray = (elementsNodeList: NodeListOf<HTMLElement>): HTMLElem
     pageElements.push(element);
   });
   return pageElements;
+};
+
+interface BestMarginProps {
+  pageWidth: number;
+  canvasWidth: number;
+  margin: number;
+}
+
+interface BestMarginResponse {
+  top: number;
+  left: number;
+}
+
+const bestMargin = ({
+  pageWidth,
+  canvasWidth,
+  margin,
+}: BestMarginProps): BestMarginResponse => {
+  const totalWidth = canvasWidth + 2 * margin;
+  const emptySpace = pageWidth - totalWidth;
+  const bestMargin = {
+    top: margin,
+    left: margin,
+  };
+  if (emptySpace > 0) {
+    bestMargin.left += (emptySpace / 2);
+  };
+  return bestMargin;
 };
 
 interface BestWidthProps {
@@ -91,7 +121,7 @@ const bestWidth = ({
     canvasWidthPercentage: 0,
   };
 
-  const totalWidth = canvasWidth + margin * 2; // canvas width + left margin + right margin; assuming both margins are equal
+  const totalWidth = canvasWidth + margin * 2 + BorderWidth; // canvas width + left margin + right margin; assuming both margins are equal
   if (totalWidth > pageWidth) {
     extras.canvasWidth = totalWidth - pageWidth;
     extras.canvasWidthPercentage = extras.canvasWidth * 100 / canvasWidth;
@@ -120,7 +150,7 @@ export const bestHeight = ({
     canvasHeightPercentage: 0,
   };
 
-  const totalHeight = canvasHeight + margin * 2; // canvas height + top margin + bottom margin; assuming both margins are equal
+  const totalHeight = canvasHeight + margin * 2 + BorderWidth; // canvas height + top margin + bottom margin; assuming both margins are equal
   if (totalHeight > pageHeight) {
     extras.canvasHeight = totalHeight - pageHeight;
     extras.canvasHeightPercentage = extras.canvasHeight * 100 / canvasHeight;
@@ -196,16 +226,18 @@ const generateBalancedElements = async (page: HTMLElement, pageOptions: PageOpti
     const { height, extras: { canvasHeightPercentage } } = bestHeight({ pageHeight: pageOptions.format[1], margin: pageOptions.margin.narrow, canvasHeight: adjustedCanvasHeight });
     width = width * (100 - canvasHeightPercentage) / 100;
 
-    balancedElements.push({
-      canvas,
-      width,
-      height,
-      margin: pageOptions.margin.narrow,
-    });
-
-    traversedElements.forEach((element: HTMLElement) => {
-      element.classList.add("hidden");
-    });
+    if (leftEls.length !== 0) {
+      balancedElements.push({
+        canvas,
+        width,
+        height,
+        margin: pageOptions.margin.narrow,
+      });
+  
+      traversedElements.forEach((element: HTMLElement) => {
+        element.classList.add("hidden");
+      });
+    }
     return await generateBalancedElements(page, pageOptions, pageElements, traversedElements, leftEls, balancedElements);
   }
 
@@ -214,15 +246,15 @@ const generateBalancedElements = async (page: HTMLElement, pageOptions: PageOpti
 
 /**
  * 
- * @param pages `HTMLElement[]`
- * @param pageOptions `PageOptions`
- * @param traversedPages `HTMLElement[]`
- * @param remainingPages `HTMLElement[]`
- * @param balancedPages `BalancedPage[]`
- * @param elementSelector `string`
- * @returns `BalancedPage[]`
+ * @param {HTMLElement[]} pages 
+ * @param {PageOptions} pageOptions 
+ * @param {HTMLElement[]} traversedPages 
+ * @param {HTMLElement[]} remainingPages 
+ * @param {BalancedPage[]} balancedPages 
+ * @param {string} elementSelector `string`
+ * @returns 
  */
-const generateBalancedPages = async (pages: HTMLElement[], pageOptions: PageOptions, traversedPages: HTMLElement[], remainingPages: HTMLElement[], balancedPages: BalancedPage[], elementSelector: string) => {
+const generateBalancedPages = async (pages: HTMLElement[], pageOptions: PageOptions, traversedPages: HTMLElement[], remainingPages: HTMLElement[], balancedPages: BalancedPage[], elementSelector: string): Promise<BalancedPage[]> => {
   if (!remainingPages.length) {
     return balancedPages;
   }
@@ -243,7 +275,7 @@ const generateBalancedPages = async (pages: HTMLElement[], pageOptions: PageOpti
   return await generateBalancedPages(pages, pageOptions, traversedPages, leftPages, [...balancedPages, ...balancedElements], elementSelector);
 };
 
-const generateBalancedPagesWithMinWidth = async (page: string, pageOptions: PageOptions, selector: string) => {
+const generateBalancedPagesWithMinWidth = async (page: string, pageOptions: PageOptions, selector: string): Promise<BalancedPage[]> => {
   const pagesNodeList = document.querySelectorAll(`.${page}`) as NodeListOf<HTMLElement>;
   const pages = toHTMLElementArray(pagesNodeList);
   const balancedPages = await generateBalancedPages(pages, pageOptions, [], pages, [], selector);
@@ -279,7 +311,8 @@ export const generateMultiPagePDF = async (page: string, pageOptions: PageOption
       pdf.addPage();
     }
     const convertedImage = page.canvas.toDataURL('image/jpeg', 1);
-    pdf.addImage(convertedImage, 'jpeg', page.margin, page.margin, page.width, page.height);
+    const { left, top } = bestMargin({ pageWidth: pageOptions.format[0], canvasWidth: page.width, margin: page.margin });
+    pdf.addImage(convertedImage, 'jpeg', left, top, page.width, page.height);
   });
   return pdf;
 };
