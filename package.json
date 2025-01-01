@@ -1,0 +1,25 @@
+{
+  "name": "documentation",
+  "version": "1.0.0",
+  "description": "The documentation project contains multiple code snippets incuding project setup & experimental changes.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abhisekdutta507/documentation.git"
+  },
+  "keywords": [
+    "documentation"
+  ],
+  "author": "abhisekdutta507",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/abhisekdutta507/documentation/issues"
+  },
+  "homepage": "https://abhisekdutta.com",
+  "dependencies": {
+    "@abhisek507/html2multipagepdf": "^2.1.0",
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.2"
+  }
+}
