@@ -38,3 +38,11 @@ const x = 5;
 #### Important Note.
 
 The **var** keyword is hoisted but the value will be never initialized.
+
+```js
+multiply(5, 4); // Uncaught TypeError: multiply is not a function
+
+var multiply = function(a, b) {
+  return a * b;
+};
+```

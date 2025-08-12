@@ -5,7 +5,7 @@ JavaScript is a high-level and widely used `Programming Language`. It was develo
 #### Name some platforms where we can run JavaScript?
 
   * Web browsers
-  * Servers using [Node.js](https://nodejs.org/en) & [Deno](https://docs.deno.com/runtime/).
+  * Servers using <a href="https://nodejs.org/en" target="_blank" rel="noopener noreferrer">Node.js</a> & <a href="https://docs.deno.com/runtime/" target="_blank" rel="noopener noreferrer">Deno</a>.
 
 That means, we can execute JavaScript on both client-side (browser) and server-side (Node.js).
 
@@ -23,7 +23,7 @@ The main disadvantages are as follows,
   * **Security risks:** Anyone can inspect the browsers to see the codebase. Which makes it vulnerable to attacks if not coded securely.
   * **Performance:** When compared to other Programming Languages like C, C++. It will be slower to execute.
   * **Browser inconsistencies:** Different browsers may interpret JavaScript differently. Which might restrict the developers to write code in such a way so that it is supported by older versions of browsers too.
-  * **Single-threaded execution:** JavaScript runs on a Single Thread. That means it can run only one task at a time. For powerful operations we must utilize [Event Loop](https://github.com/abhisekdutta507/documentation/tree/main/javascript/what-is-event-loop%3F#what-is-event-loop), [Worker Threads](https://nodejs.org/api/worker_threads.html#worker-threads) & [Cluster](https://nodejs.org/api/cluster.html#cluster) properly.
+  * **Single-threaded execution:** JavaScript runs on a Single Thread. That means it can run only one task at a time. For powerful operations we must utilize <a href="https://github.com/abhisekdutta507/documentation/tree/main/javascript/what-is-event-loop%3F#what-is-event-loop" target="_blank" rel="noopener noreferrer">Event Loop</a>, <a href="https://nodejs.org/api/worker_threads.html#worker-threads" target="_blank" rel="noopener noreferrer">Worker Threads</a> & <a href="https://nodejs.org/api/cluster.html#cluster" target="_blank" rel="noopener noreferrer">Cluster</a> properly.
 
 #### Example snippet:
 
@@ -35,4 +35,4 @@ function sum(a, b) {
 console.log(sum(8, 6)); // Output: 14
 ```
 
-Demo application to show the usage of [Worker Threads & Cluster](https://bitbucket.org/abhisekdutta507/nodejs-worker-threads-and-clusters/src/master/).
+Demo application to show the usage of <a href="https://bitbucket.org/abhisekdutta507/nodejs-worker-threads-and-clusters/src/master/" target="_blank" rel="noopener noreferrer">Worker Threads & Cluster</a>.
