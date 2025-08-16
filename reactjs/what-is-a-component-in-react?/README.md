@@ -4,22 +4,55 @@ Components are building blocks of React.js applications. It allows us to split t
 
 #### Functional Components
 
-Functional components are JavaScript functions that return JSX elements.
+Functional components are JavaScript/TypeScript functions that return JSX/TSX elements.
 
-```jsx
-function Greeting({ name = '' }) {
-  return <h1>Hello, {name}!</h1>;
+```tsx
+interface ICardProps {
+  label: string;
+  fontColor: string;
+  bgColor: string;
+}
+
+function Card({
+  label,
+  bgColor,
+  fontColor
+}: ICardProps) {
+  return (
+    <div className={`flex w-[240px] h-[240px] ${bgColor} ${fontColor} items-center justify-center`}>
+      {label}
+    </div>
+  );
 }
 ```
 
 #### Class Components
 
-Class components are ES6 classes. They can have their own lifecycle methods.
+Class components are ES6 classes. They can have their own lifecycle methods. **We cannot use class based components on server side**. We must write `"use client";` to use class based components.
 
-```jsx
-class Greeting extends React.Component {
+```tsx
+"use client";
+
+import { Component } from "react";
+
+interface ICardProps {
+  label: string;
+  fontColor: string;
+  bgColor: string;
+}
+
+export class Card extends Component<ICardProps> {
+  constructor(props: ICardProps) {
+    super(props);
+  }
+
   render() {
-    return <h1>Hello, {this.props.name}!</h1>;
+    const { label, bgColor, fontColor } = this.props;
+    return (
+      <div className={`flex w-[240px] h-[240px] ${bgColor} ${fontColor} items-center justify-center`}>
+        {label}
+      </div>
+    );
   }
 }
 ```
@@ -27,9 +60,15 @@ class Greeting extends React.Component {
 #### Key Characteristics of Components
 
 1. **Reusability:** Components can be reused throughout the application. It can reduce the amount of code to be written also easy to maintain.
-2. **Props:** Properties are read-only inputs that are passed to components. They allow data to be passed from parent to child components.
-    ```jsx
-    function Greeting({ name = '' }) {
+2. **Props:** Properties are read-only inputs that can be passed to components. They allow to pass data from parent to child components.
+    ```tsx
+    interface IGreetingProps {
+      name: string;
+    }
+
+    function Greeting({
+      name,
+    }: IGreetingProps) {
       return <h1>Hello, {name}!</h1>;
     }
     ```
@@ -58,21 +97,58 @@ class Greeting extends React.Component {
     ```
 
     **Functional Component with State:**
-    ```jsx
-    import { useState } from 'react';
+    ```tsx
+    "use client";
 
-    function Counter() {
-      const [count, setCount] = useState(0);
+    import { FormEvent, useState } from "react";
 
-      const increment = () => {
+    export function Counter() {
+      const [count, setCount] = useState<number>(0);
+
+      const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
         setCount(count + 1);
       };
 
       return (
-        <div>
-          <p>Count: {count}</p>
-          <button onClick={increment}>Increment</button>
-        </div>
+        <form className="flex flex-wrap gap-2 p-4 max-w-md" method="post" onSubmit={handleSubmit}>
+          <span className="flex items-center justify-center w-3xs h-8">{count}</span>
+          <button type="submit" className="cursor-pointer">Increase</button>
+        </form>
+      );
+    };
+    ```
+
+    **Functional Component with FormData:**
+    ```tsx
+    "use client";
+
+    import { FormEvent } from "react";
+
+    export function SummationForm() {
+      const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        const form = new FormData(event?.currentTarget);
+        const valueA = form.get("valueA") as string;
+        const valueB = form.get("valueB") as string;
+
+        try {
+          const numberA = Number(valueA);
+          const numberB = Number(valueB);
+          const summation = numberA + numberB;
+          alert(`${numberA} + ${numberB} = ${summation}`);
+        } catch (e) {
+          alert("Failed to read the numbers!");
+        }
+      };
+
+      return (
+        <form className="flex flex-wrap gap-2 p-4 max-w-md" method="post" onSubmit={handleSubmit}>
+          <input name="valueA" type="number" placeholder="Number A" />
+          <input name="valueB" type="number" placeholder="Number B" />
+          <button type="submit" className="cursor-pointer">Sum</button>
+        </form>
       );
     }
     ```
