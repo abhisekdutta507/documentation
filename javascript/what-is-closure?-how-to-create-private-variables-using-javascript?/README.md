@@ -1,6 +1,6 @@
 ### What is closure? How to create private variables using JavaScript?
 
-A closure gives you access to an outer function's scope from an inner function. JavaScript does not have a native way to create private variables. However, we can achieve that in different ways.
+A closure gives you access to an outer function's scope from an inner function. In JavaScript we can create private variables using **Closure** & **Private Field**.
 
 #### GUIDE
 
@@ -72,7 +72,9 @@ console.log(counter.#count);      // SyntaxError: Private field '#count' must be
 
 3. Using ES6 Classes with `WeakMaps`: WeakMaps provide a way to create private variables in ES6 and beyond.
 
-#### Example:
+### Can we consider using **WeakMap** to create private variables?
+
+The answer should be **no**. Private variables should not be directly accessible from outside the class. But with **WeakMap** we can actually change the value from outside the class.
 
 ```js
 const privateData = new WeakMap();
@@ -106,4 +108,15 @@ console.log(counter.decrement()); // 2
 console.log(counter.getCount());  // 2
 console.log(counter.count);       // undefined
 console.log(privateData);         // WeakMap { <items unknown> }
+```
+
+#### How do we change the count from outside the class?
+
+```ts
+const privateData = new WeakMap();
+const counter = new Counter();
+
+const data = privateData.get(counter);
+data.count = 10;
+console.log(counter.getCount());  // 10
 ```

@@ -21,26 +21,26 @@ function sum(a, b) {
 }
 ```
 
-#### **let** and **const** are never hoisted.
+#### **let** and **const** are also hoisted. But the behaviour will be different than **var** and **function**.
 
 ```js
-console.log(y);  // Uncaught ReferenceError: y is not defined
+console.log(y);  // ReferenceError: Cannot access 'y' before initialization
 
 let y = 10;
 ```
 
 ```js
-console.log(x);  // Uncaught ReferenceError: x is not defined
+console.log(x);  // ReferenceError: Cannot access 'x' before initialization
 
 const x = 5;
 ```
 
 #### Important Note.
 
-The **var** keyword is hoisted but the value will be never initialized.
+The **var** keyword is hoisted and the value will be initialized with **undefined**.
 
 ```js
-multiply(5, 4); // Uncaught TypeError: multiply is not a function
+multiply(5, 4); // TypeError: multiply is not a function
 
 var multiply = function(a, b) {
   return a * b;

@@ -19,7 +19,7 @@ functionName.call(thisArg, arg1, arg2, ...);
 const personA = {
     firstName: 'Abhisek',
     lastName: 'Dutta',
-    getFullName: function (city, country) {
+    getFullName(city, country) {
         console.log(`${this.firstName} ${this.lastName} lives in ${city}, ${country}`);
     }
 };

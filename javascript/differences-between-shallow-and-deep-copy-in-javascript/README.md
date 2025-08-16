@@ -36,26 +36,49 @@ The solution is `Deep Copy`. A deep copy creates a new object or array and recur
 #### Manual Recursive Function
 
 ```js
-function deepCopy(obj) {
+function cloneDeep(obj) {
   if (obj === null || typeof obj !== 'object') {
     return obj;
   }
 
   if (Array.isArray(obj)) {
-    return obj.map(item => deepCopy(item));
+    return obj.map(item => cloneDeep(item));
   }
 
   const copiedObj = {};
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
-      copiedObj[key] = deepCopy(obj[key]);
+      copiedObj[key] = cloneDeep(obj[key]);
     }
   }
   return copiedObj;
 }
 
-const deepCopyObject = deepCopy(original);
+const deepCopyObject = cloneDeep(original);
 
 deepCopyObject.address.pin = 700063;
 console.log(original.address); // Output: 700104
+```
+
+Write the function in **TypeScript**.
+
+```ts
+function cloneDeep<O>(obj: O): O {
+  if (obj === null || typeof obj !== "object") {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map((item) => cloneDeep(item)) as O;
+  }
+
+  const clonedObj: { [key: string]: unknown } = {};
+  for (const key in obj) {
+    if (obj?.hasOwnProperty(key)) {
+      clonedObj[key] = cloneDeep(obj[key]);
+    }
+  }
+
+  return clonedObj as O;
+}
 ```

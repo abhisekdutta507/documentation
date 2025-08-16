@@ -16,7 +16,6 @@ const [x, y] = array;
 
 console.log(x); // Output: 1
 console.log(y); // Output: 2
-
 ```
 
 #### Skipping Elements:
@@ -27,7 +26,26 @@ const [first, , third] = array;
 
 console.log(first); // Output: 1
 console.log(third); // Output: 3
+```
 
+#### Last Element of an Array:
+
+```js
+const array = [1, 2, 3, 4];
+
+/**
+ * The last element is: array[3]
+ * That means array[array.length - 1]
+ * We can utilize the [] snippet for Objects as well like obj["fistName"]
+ * That means we can destructure the last element like an Object destructure
+ */
+const { [0]: first } = users;
+const { [1]: second } = users;
+const { [array.length - 1]: second } = array;
+
+console.log(first);   // 1
+console.log(second);  // 2
+console.log(second);  // 4
 ```
 
 #### Using Rest Operator:

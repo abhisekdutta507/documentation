@@ -19,6 +19,34 @@ Array.prototype.myMap = function(callback) {
 };
 ```
 
+Create the custom **myMap** using **TypeScript**.
+
+```ts
+function myMap<T>(callback: (item: T, index: number, items: T[]) => T) {
+  const updatedItems: T[] = [];
+  for (let index = 0; index < this.length; index++) {
+    const item = this[index];
+    updatedItems.push(callback(item, index, this));
+  }
+  return updatedItems;
+}
+
+Object.assign(Array.prototype, { myMap });
+```
+
+Create the custom **myMap** using **TypeScript** as a regular function not an Array prototype.
+
+```ts
+function myMap<T>(items: T[], callback: (item: T, index: number, items: T[]) => T) {
+  const updatedItems: T[] = [];
+  for (let index = 0; index < items.length; index++) {
+    const item = items[index];
+    updatedItems.push(callback(item, index, items));
+  }
+  return updatedItems;
+}
+```
+
 Usage,
 
 ```javascript

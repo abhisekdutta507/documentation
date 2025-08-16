@@ -104,7 +104,7 @@ fetchData('http://example.com')
 
 #### Promise.race():
 
-Resolves or rejects as soon as one of the promises resolves or rejects.
+As the name suggests it returns the 1st promise executed. Either it is **fulfilled** or **rejected**.
 
 ```js
 const wait = async (n = 1) => {
@@ -167,7 +167,7 @@ Error: Simple execution error!
 
 #### Promise.all()
 
-Short-circuits and rejects if any promise rejects. All promises must be resolved.
+Rejected if any promise is rejected. All promises must be fulfilled. When all promises are fulfilled it returns an array of fulfilled responses.
 
 ```js
 const wait = async (n = 1) => {
@@ -221,7 +221,7 @@ Error: Simple execution error!
 
 #### Promise.allSettled():
 
-`Promise.allSettled()` is a method in JavaScript that returns a promise when all of the given promises are either resolved or rejected.
+`Promise.allSettled()` is a method in JavaScript that returns a promise when all of the given promises are executed with either **fulfilled** or **rejected** statuses.
 
 ```js
 const wait = async (n = 1) => {
@@ -285,7 +285,7 @@ Output
 
 #### Promise.any():
 
-Resolves as soon as any promise resolves, ignores rejections until all promises reject.
+Fulfills as soon as any promise fulfilled. But rejected when all the promises are rejected. The output will have only 1 object. Either the 1st fulfilled promise or a list of all rejected promises.
 
 ```js
 const wait = async (n = 1) => {
