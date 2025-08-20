@@ -7,6 +7,7 @@ The documentation project contains multiple code snippets incuding project setup
 - [javascript](./javascript/)
 - [mysql](./mysql/)
 - [reactjs](./reactjs/)
+- [nextjs](./nextjs/)
 
 ## Portfolio
 

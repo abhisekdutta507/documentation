@@ -90,7 +90,7 @@ export async function GET(request: Request, { params }: IRequestProps) {
   return Response.json({ error: false }, { status: 200 });
 }
 
-interface ISession {
+interface IBody {
   username: string;
   password: string;
 };
@@ -99,7 +99,7 @@ export async function POST(request: Request) {
   /**
    * @description https://nextjs.org/docs/app/building-your-application/routing/route-handlers#streaming
    */
-  const body: ISession = await request.json();
+  const body: IBody = await request.json();
 
   return Response.json({ error: true }, { status: 200 });
 }

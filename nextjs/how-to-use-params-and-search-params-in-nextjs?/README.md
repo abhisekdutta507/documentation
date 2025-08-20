@@ -4,7 +4,7 @@ The syntax is different for **server components** and **client components**.
 
 ### Snippet for Server Components
 
-A Server Component can be `async` Components. By default `params` & `searchParams` will be present as props.
+Server Components can be `async` Components. By default `params` & `searchParams` will be present as props.
 
 ```tsx
 interface ICardIdProps {
