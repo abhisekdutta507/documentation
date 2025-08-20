@@ -1,4 +1,4 @@
-## WHat is Incremental Static Regeneration (ISR)?
+## What is Incremental Static Regeneration (ISR)?
 
 Incremental Static Regeneration (ISR) enables you to:
 
