@@ -40,7 +40,31 @@ console.log(counter.getCount());  // 2
 console.log(counter.count);       // undefined
 ```
 
-2. Using `ES2020 Private Fields`: Private fields are the most modern and straightforward approach, but require support for ES2020.
+2. We can also use JavaScript Constructor to create private variable.
+
+#### Example:
+
+```ts
+function Counter() {
+  let count = 0; // private variable
+
+  this.increment = function increment() {
+    return ++count;
+  }
+
+  this.decrement = function decrement() {
+    return --count;
+  }
+
+  this.getCount = function getCount() {
+    return count;
+  }
+}
+
+const counter = new Counter();
+```
+
+3. Using `ES2020 Private Fields`: Private fields are the most modern and straightforward approach, but require support for ES2020.
 
 #### Example:
 
@@ -69,8 +93,6 @@ console.log(counter.decrement()); // 2
 console.log(counter.getCount());  // 2
 console.log(counter.#count);      // SyntaxError: Private field '#count' must be declared in an enclosing class
 ```
-
-3. Using ES6 Classes with `WeakMaps`: WeakMaps provide a way to create private variables in ES6 and beyond.
 
 ### Can we consider using **WeakMap** to create private variables?
 
