@@ -215,3 +215,46 @@ Name Abhisek
 Roll 10
 Remarks It was great being a part of the school!
 ```
+
+### Create a StopWatch using getter & setter
+
+```ts
+function StopWatch() {
+  let startTime = 0;
+  let stopTime = 0;
+  let running = false;
+  let duration = 0;
+
+  this.start = function start() {
+    if (running) {
+      throw new ReferenceError("Stopwatch has already started!");
+    }
+
+    startTime = new Date().getTime();
+    running = true;
+  }
+
+  this.stop = function stop() {
+    if (!running) {
+      throw new ReferenceError("Stopwatch was never started!");
+    }
+
+    stopTime = new Date().getTime();
+    running = false;
+    duration += (stopTime - startTime) / 1000;
+  }
+
+  this.reset = function reset() {
+    startTime = 0;
+    stopTime = 0;
+  }
+
+  Object.defineProperty(this, "duration", {
+    get: function get() {
+      return duration;
+    }
+  });
+}
+
+const sw = new StopWatch();
+```
