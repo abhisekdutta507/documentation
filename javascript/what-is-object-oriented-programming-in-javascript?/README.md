@@ -172,6 +172,9 @@ const stringA = new String();   // [String: '']
 const numberA = new Number();   // [Number: 0]
 const booleanA = new Boolean(); // [Boolean: false]
 const functionA = new Function(); // function anonymous() {}
+const errorA = new Error();
+const typeErrorA = new TypeError();
+const referenceErrorA = new ReferenceError();
 ```
 
 #### Tricky Interview Question
