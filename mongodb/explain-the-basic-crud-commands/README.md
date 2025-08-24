@@ -1,4 +1,4 @@
-## Explain the basic MongoDB commands
+## Explain the basic CRUD commands
 
 ### List the databases
 
