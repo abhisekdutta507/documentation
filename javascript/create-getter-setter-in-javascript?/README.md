@@ -28,7 +28,7 @@ class Student {
 
   set remarks(remarks: string) {
     if (typeof remarks !== "string") {
-      throw TypeError(`Cannot assign ${typeof name} into string`);
+      throw TypeError(`Cannot assign ${typeof remarks} into string`);
     }
 
     if (remarks.length < 10) {
@@ -116,11 +116,11 @@ class Student {
 
   set remarks(remarks) {
     if (typeof remarks !== "string") {
-      throw TypeError(`Cannot assign ${typeof name} into string`);
+      throw TypeError(`Cannot assign ${typeof remarks} into string`);
     }
 
     if (remarks.length < 10) {
-      throw ReferenceError(`Name must be 10 characters long`);
+      throw ReferenceError(`Remarks must be 10 characters long`);
     }
 
     this.#remarks = remarks;
