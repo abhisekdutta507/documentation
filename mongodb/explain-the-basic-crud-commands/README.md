@@ -44,7 +44,7 @@ orders
   * [estimatedDocumentCount()](#lets-try-estimateddocumentcount)
   * [updateOne()](#update-a-document)
   * [updateMany()](#update-multiple-documents)
-  * [update()](#what-is-the-update-function-do)
+  * [update()](#what-does-the-update-function-do)
   * [replaceOne()](#replace-a-document-completely)
   * [deleteOne()](#delete-a-document)
   * [deleteMany()](#delete-multiple-documents)
