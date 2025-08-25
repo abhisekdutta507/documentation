@@ -164,58 +164,107 @@ db.accounts.updateOne({
 });
 ```
 
-Technically, the 2nd query should fail. Because, **Agent B** already has **2000** in their account.
+Technically, the 2nd query should fail. Because, **Agent B** already has **10000** in their account which is the maximun limit allowed by the bank.
 
 If the 2nd query fails for any reason, we must reverse the **2000** deducted by the 1st query.
 
-This kind of complex operations must be handled with **transaction**.
+This kind of complex operations must be handled within **transaction**.
 
 ```ts
-import { MongoClient, ServerApiVersion } from "mongodb";
+import { MongoClient, ObjectId, ClientSession } from "mongodb";
+
+type TransactionOptions = import("mongodb").TransactionOptions;
+
+enum DB {
+  practice = "practice"
+}
+
+enum Collection {
+  products = "products",
+  users = "users",
+  accounts = "accounts",
+}
+
+enum AccountType {
+  savings = "savings",
+  fd = "fd",
+  rd = "rd",
+  loan = "loan",
+}
+
+interface Account {
+  type: AccountType;
+  balance: number;
+  userId: ObjectId;
+}
+
+type AccountWithId = import("mongodb").WithId<Account>;
+
+interface TransferAmountResponse {
+  error: boolean;
+  message: string;
+}
 
 const maxAllowedLimit: number = 10000;
-
+const checkMaxAllowedLimit = false;
+const uri: string = "mongodb+srv://<<username>>:<<password>>@<<cluster>>.tgsonor.mongodb.net/";
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: false
-  }
-});
+const client = new MongoClient(uri);
 
-async function transferAmount(from: number, to: number: amount: number) {
-  // Step 1: Start a Client Session
+const transactionOptions: TransactionOptions = {
+  readPreference: 'primary',
+  readConcern: { level: 'local' },
+  writeConcern: { w: 'majority' },
+};
+
+async function main() {
   const session = client.startSession();
 
-  // Step 2: Optional. Define options to use for the transaction
-  const transactionOptions = {
-    readPreference: 'primary',
-    readConcern: { level: 'local' },
-    writeConcern: { w: 'majority' }
+  try {
+    const transfer = await transferAmount(
+      new ObjectId("68ac11d98fd94f291c4f8c63"), // 10000
+      new ObjectId("68ac11d98fd94f291c4f8c64"), // invalid user _id
+      6000,
+      session
+    );
+    console.log(transfer);
+  } catch (e) {
+    
+  } finally {
+    await session.endSession();
+    await client.close();
+  }
+}
+
+async function transferAmount(from: ObjectId, to: ObjectId, amount: number, session: ClientSession): Promise<TransferAmountResponse> {
+  const response: TransferAmountResponse = {
+    error: false,
+    message: "",
   };
 
   try {
-    const transactionResults = await session.withTransaction(async () => {
-      const accounts = client.db('bank').collection('accounts');
+    await session.withTransaction<{}>(async () => {
+      const accounts = client.db(DB.practice).collection(Collection.accounts);
 
-      const accountA = await accounts.findOne({ userId: from }, { session });
-      if (!accountA) {
+      const sender = await accounts.findOne({ userId: from }) as AccountWithId;
+      if (!sender) {
         throw new Error("Failed to find the sender account!");
       }
 
-      if (accountA?.balance < amount) {
-        throw new Error("Insufficient balance!");
+      if (sender?.balance < amount) {
+        throw new Error("Insufficient balance in the sender account!");
       }
 
-      const accountB = await accounts.findOne({ userId: to }, { session });
-      if (!accountB) {
-        throw new Error("Failed to find the recepient account!");
-      }
+      if (checkMaxAllowedLimit) {
+        const recepient = await accounts.findOne({ userId: to }) as AccountWithId;
+        if (!recepient) {
+          throw new Error("Failed to find the recepient account!");
+        }
 
-      const balanceToBe: number = accountB?.balance + amount;
-      if (balanceToBe > maxAllowedLimit) {
-        throw new Error("Max balance limit has reached!");
+        const balanceToBe: number = recepient?.balance + amount;
+        if (balanceToBe > maxAllowedLimit) {
+          throw new Error("Max balance limit will be exceded in recepient account!");
+        }
       }
 
       const updateA = await accounts.updateOne({ userId: from }, { $inc: { balance: amount * -1 } }, { session });
@@ -225,12 +274,18 @@ async function transferAmount(from: number, to: number: amount: number) {
 
       const updateB = await accounts.updateOne({ userId: to }, { $inc: { balance: amount } }, { session });
       if (updateB?.modifiedCount !== 1) {
-        throw new Error("Failed to transfer the amount to receiver account!");
+        throw new Error("Failed to transfer the amount to recepient account!");
       }
+
+      return {};
     }, transactionOptions);
+  } catch(e) {
+    response.error = true;
+    response.message = e?.message;
   } finally {
-    await session.endSession();
-    await client.close();
+    return response;
   }
 }
+
+main();
 ```

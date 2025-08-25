@@ -210,6 +210,34 @@ into the `updateMany` function. We can update all the documents in a collection.
 db.products.updateMany({}, { $set: { author: "Abhisek Dutta" } });
 ```
 
+#### What is the `update` function do?
+
+The `update()` method is deprecated in the [mongosh](https://www.mongodb.com/docs/mongodb-shell/reference/compatibility/).
+
+By default, the `db.collection.update()` method updates a single document. Include the option `multi: true` to update all documents that match the query.
+
+```js
+db.products.update({
+  author: "Agent A"
+}, {
+  author: "Agent B"
+}, {
+  multi: true
+});
+```
+
+If run on mongosh then it will throw an error,
+
+```js
+DeprecationWarning: Collection.update() is deprecated. Use updateOne, updateMany, or bulkWrite.
+```
+
+But, the Node.js drivers older than version 6 will be able handle it.
+
+### Replace a complete document
+
+
+
 ### Delete a document
 
 ```js
