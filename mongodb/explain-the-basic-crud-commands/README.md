@@ -40,7 +40,7 @@ orders
   * [find()](#list-the-inserted-documents)
   * [findOne()](#find-a-document-by-_id)
   * [count()](#count-documents)
-  * [countDocuments()](#so-when-we-try-countcocuments)
+  * [countDocuments()](#so-when-we-try-countdocuments)
   * [estimatedDocumentCount()](#lets-try-estimateddocumentcount)
   * [updateOne()](#update-a-document)
   * [updateMany()](#update-multiple-documents)
