@@ -33,6 +33,23 @@ accounts
 orders
 ```
 
+## What are everyday CRUD operations?
+
+  * [insertOne()](#insert-a-document-in-collection)
+  * [insertMany()](#insert-multiple-documents-in-collection)
+  * [find()](#list-the-inserted-documents)
+  * [findOne()](#find-a-document-by-_id)
+  * [count()](#count-documents)
+  * [countDocuments()](#so-when-we-try-countcocuments)
+  * [estimatedDocumentCount()](#lets-try-estimateddocumentcount)
+  * [updateOne()](#update-a-document)
+  * [updateMany()](#update-multiple-documents)
+  * [update()](#what-is-the-update-function-do)
+  * [replaceOne()](#replace-a-document-completely)
+  * [deleteOne()](#delete-a-document)
+  * [deleteMany()](#delete-multiple-documents)
+  * [bulkWrite()](#perform-multiple-updates-through-bulkwrite)
+
 ### Insert a document in collection
 
 Lets consider we want to insert a document in a collection called **products**.
@@ -154,6 +171,102 @@ The output will look like:
 }
 ```
 
+#### Find a document by _id
+
+```js
+db.products.findOne({ _id: ObjectId("68aae075be8183d30623d92e") });
+```
+
+The result will look like,
+
+```js
+{
+  _id: ObjectId('68aae075be8183d30623d92e'),
+  name: 'T-Shirt',
+  price: 609,
+  brand: 'Aldo'
+}
+```
+
+If no result found,
+
+```js
+null
+```
+
+### Find distinct items from a collection
+
+```js
+const field = "author";
+const query = {}; // optional
+
+db.collection.distinct(field, query);
+```
+
+It will return the author names in an Array,
+
+```js
+[ 'Abhisek Dutta', 'Pitambar Laha' ]
+```
+
+
+### Count documents
+
+```js
+db.products.count({ type: "Casual" });
+```
+
+We will get a warning. But, it will also return the response.
+
+```js
+DeprecationWarning: Collection.count() is deprecated. Use countDocuments or estimatedDocumentCount.
+3 // a number
+```
+
+#### So, when we try `countDocuments`:
+
+```js
+db.products.countDocuments({ type: "Casual" });
+```
+
+or
+
+```js
+db.products.countDocuments({});
+```
+
+or
+
+```js
+db.products.countDocuments();
+```
+
+All the above 3 are correct syntaxes. The response will be,
+
+```js
+3 // a number
+```
+
+#### Let's try `estimatedDocumentCount`:
+
+```js
+db.products.estimatedDocumentCount();
+```
+
+or
+
+```js
+db.products.estimatedDocumentCount({});
+```
+
+Both the syntaxes are correct. The response will be,
+
+```js
+3 // a number
+```
+
+**NOTE**: The `estimatedDocumentCount` function **does not take query filter**. It returns an **estimated number of documents** in a collection based on collection metadata. Because of that it is must **faster** than `countDocuments`.
+
 ### Update a document
 
 ```js
@@ -234,9 +347,20 @@ DeprecationWarning: Collection.update() is deprecated. Use updateOne, updateMany
 
 But, the Node.js drivers older than version 6 will be able handle it.
 
-### Replace a complete document
+### Replace a document completely
 
+```js
+db.products.replaceOne({
+  _id: ObjectId("68aad9b9be8183d30623d928")
+}, {
+  name: 'Book A',
+  price: 240,
+  type: 'Casual',
+  author: 'Pitambar Laha'
+});
+```
 
+**NOTE**: There is no need to pass `$set` atomic operator to replace an object.
 
 ### Delete a document
 
@@ -289,6 +413,55 @@ db.products.deleteMany({});
 ```
 
 This will delete all the documents from the products collection.
+
+### Perform multiple updates through bulkWrite
+
+```js
+db.products.bulkWrite([
+  {
+    insertOne: {
+      document: {},
+    },
+  },
+  {
+    updateOne: {
+      filter: {},
+      update: {
+        $set: {}
+      },
+      upsert: false, // Default false
+    },
+  },
+  {
+    updateMany: {
+      filter: {},
+      update: {
+        $set: {}
+      },
+      upsert: false, // Default false
+    },
+  },
+  {
+    replaceOne: {
+      filter: {},
+      replacement: {},
+      upsert: false, // Default false
+    },
+  },
+  {
+    deleteOne: {
+      filter: {},
+    }
+  },
+  {
+    deleteMany: {
+      filter: {},
+    }
+  }
+]);
+```
+
+The available options we can pass are: `insertOne`, `updateOne`, `updateMany`, `replaceOne`, `deleteOne` & `deleteMany`.
 
 ## Errors mostly the engineers make
 
