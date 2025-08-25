@@ -323,7 +323,7 @@ into the `updateMany` function. We can update all the documents in a collection.
 db.products.updateMany({}, { $set: { author: "Abhisek Dutta" } });
 ```
 
-#### What is the `update` function do?
+#### What does the `update` function do?
 
 The `update()` method is deprecated in the [mongosh](https://www.mongodb.com/docs/mongodb-shell/reference/compatibility/).
 
