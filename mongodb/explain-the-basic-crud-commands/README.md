@@ -1,6 +1,6 @@
-## Explain the basic CRUD commands
+# Explain the basic CRUD commands
 
-### List the databases
+## List the databases
 
 ```sh
 show dbs
@@ -13,13 +13,13 @@ portfolio 156.00 KiB
 practice  72.00 KiB
 ```
 
-#### We can select from the avaiable databases
+## We can select from the avaiable databases
 
 ```sh
 use practice
 ```
 
-### List the collections
+## List the collections
 
 ```sh
 show collections
@@ -33,7 +33,7 @@ accounts
 orders
 ```
 
-## What are everyday CRUD operations?
+# What are everyday CRUD operations?
 
   * [insertOne()](#insert-a-document-in-collection)
   * [insertMany()](#insert-multiple-documents-in-collection)
@@ -50,7 +50,7 @@ orders
   * [deleteMany()](#delete-multiple-documents)
   * [bulkWrite()](#perform-multiple-updates-through-bulkwrite)
 
-### Insert a document in collection
+## Insert a document in collection
 
 Lets consider we want to insert a document in a collection called **products**.
 
@@ -71,7 +71,7 @@ The output will look like:
 }
 ```
 
-#### Insert multiple documents in collection
+### Insert multiple documents in collection
 
 ```js
 db.products.insertMany([
@@ -100,7 +100,7 @@ The output will look like:
 }
 ```
 
-#### Insert document with custom `_id` in collection
+### Insert document with custom `_id` in collection
 
 ```js
 db.products.insertOne({
@@ -120,7 +120,7 @@ The output looks like,
 }
 ```
 
-### List the inserted documents
+## List the inserted documents
 
 ```js
 db.products.find();
@@ -171,7 +171,7 @@ The output will look like:
 }
 ```
 
-#### Find a document by _id
+### Find a document by _id
 
 ```js
 db.products.findOne({ _id: ObjectId("68aae075be8183d30623d92e") });
@@ -194,7 +194,7 @@ If no result found,
 null
 ```
 
-### Find distinct items from a collection
+## Find distinct items from a collection
 
 ```js
 const field = "author";
@@ -210,7 +210,7 @@ It will return the author names in an Array,
 ```
 
 
-### Count documents
+## Count documents
 
 ```js
 db.products.count({ type: "Casual" });
@@ -223,7 +223,7 @@ DeprecationWarning: Collection.count() is deprecated. Use countDocuments or esti
 3 // a number
 ```
 
-#### So, when we try `countDocuments`:
+### So, when we try `countDocuments`:
 
 ```js
 db.products.countDocuments({ type: "Casual" });
@@ -247,7 +247,7 @@ All the above 3 are correct syntaxes. The response will be,
 3 // a number
 ```
 
-#### Let's try `estimatedDocumentCount`:
+### Let's try `estimatedDocumentCount`:
 
 ```js
 db.products.estimatedDocumentCount();
@@ -267,7 +267,7 @@ Both the syntaxes are correct. The response will be,
 
 **NOTE**: The `estimatedDocumentCount` function **does not take query filter**. It returns an **estimated number of documents** in a collection based on collection metadata. Because of that it is must **faster** than `countDocuments`.
 
-### Update a document
+## Update a document
 
 ```js
 db.products.updateOne({name: "A Book"}, { $set: { name: "Book A" } });
@@ -285,19 +285,19 @@ The output will look like:
 }
 ```
 
-#### Update a document by _id
+### Update a document by _id
 
 ```js
 db.products.updateOne({ _id: ObjectId("68aad9b9be8183d30623d928") }, { $set: { price: 156 } });
 ```
 
-#### Update multiple documents
+### Update multiple documents
 
 ```js
 db.products.updateMany({ price: { $gt: 15 } }, { $set: { type: "Premium" } });
 ```
 
-#### What if we do not pass any argument in the `updateOne` or `updateMany` function?
+### What if we do not pass any argument in the `updateOne` or `updateMany` function?
 
 It will throw an error,
 
@@ -323,7 +323,7 @@ into the `updateMany` function. We can update all the documents in a collection.
 db.products.updateMany({}, { $set: { author: "Abhisek Dutta" } });
 ```
 
-#### What does the `update` function do?
+### What does the `update` function do?
 
 The `update()` method is deprecated in the [mongosh](https://www.mongodb.com/docs/mongodb-shell/reference/compatibility/).
 
@@ -347,7 +347,7 @@ DeprecationWarning: Collection.update() is deprecated. Use updateOne, updateMany
 
 But, the Node.js drivers older than version 6 will be able handle it.
 
-### Replace a document completely
+## Replace a document completely
 
 ```js
 db.products.replaceOne({
@@ -362,7 +362,7 @@ db.products.replaceOne({
 
 **NOTE**: There is no need to pass `$set` atomic operator to replace an object.
 
-### Delete a document
+## Delete a document
 
 ```js
 db.products.deleteOne({ _id: "JKT-OLP-IU9" });
@@ -377,7 +377,7 @@ The output will look like:
 }
 ```
 
-#### What if we do not pass any argument in the `deleteOne` function?
+### What if we do not pass any argument in the `deleteOne` function?
 
 It will throw an error,
 
@@ -385,7 +385,7 @@ It will throw an error,
 MongoshInvalidInputError: [COMMON-10001] Missing required argument at position 0 (Collection.deleteOne)
 ```
 
-#### Delete multiple documents
+### Delete multiple documents
 
 ```js
 db.products.deleteMany({ name: "T-Shirt" });
@@ -400,7 +400,7 @@ The output will look like:
 }
 ```
 
-#### What if we do not pass any argument in the `deleteMany` function?
+### What if we do not pass any argument in the `deleteMany` function?
 
 The result will be same as `deleteOne`. But we can pass,
 
@@ -463,7 +463,7 @@ db.products.bulkWrite([
 
 The available options we can pass are: `insertOne`, `updateOne`, `updateMany`, `replaceOne`, `deleteOne` & `deleteMany`.
 
-## Errors mostly the engineers make
+# Errors mostly the engineers make
 
 When performing `updateMany` & `deleteMany` we are allowed to pass `{}` but we should never do that without intention.
 
