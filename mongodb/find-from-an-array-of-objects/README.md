@@ -168,7 +168,7 @@ Which means the query changes to,
 
 ```js
 db.users.find({
-  cars: { $eq: ["cars"] }
+  cars: { $eq: ["BMW"] }
 }).projection({
   _id: false,
   name: true,
@@ -304,3 +304,162 @@ It will match users who use `only Honda & VW both`,
 ```js
 0
 ```
+
+## Another interesting operator in `$elemMatch`. It can find from an array within the documents.
+
+Let's consider we have documents into `survey` collection:
+
+```js
+db.survey.insertMany( [
+  {
+    "_id": 1,
+    "results": [
+      { "product": "abc", "score": 10 },
+      { "product": "xyz", "score": 5 }
+    ]
+  },
+  {
+    "_id": 2,
+    "results": [
+      { "product": "abc", "score": 8 },
+      { "product": "xyz", "score": 7 }
+    ]
+  },
+  {
+    "_id": 3,
+    "results": [
+      { "product": "abc", "score": 7 },
+      { "product": "xyz", "score": 8 }
+    ]
+  },
+  {
+    "_id": 4,
+    "results": [
+      { "product": "abc", "score": 7 },
+      { "product": "def", "score": 8 }
+    ]
+  },
+  {
+    "_id": 5,
+    "results": {
+      "product": "xyz", "score": 7
+    }
+  }
+]);
+```
+
+### Let's find the surveys with `{ product: "xyz" }`:
+
+```js
+db.survey.find({
+  results: {
+    $elemMatch: {
+      product: "xyz"
+    }
+  }
+}).projection({
+  _id: true,
+}).toArray();
+```
+
+In the result we get,
+
+```js
+[ { _id: 1 }, { _id: 2 }, { _id: 3 } ]
+```
+
+**NOTICE:** We do not get the object `{ _id: 5 }`. Because `$elemMatch` only matches the objects within **results** array. But in that case **results** was not an array.
+
+### Let's find the surveys with `{ product: "xyz" }`. And also where the `score is greater than equals 8`.
+
+```js
+db.survey.find({
+  results: {
+    $elemMatch: {
+      product: "xyz",
+      score: { $gte: 8 }
+    }
+  }
+}).projection({
+  _id: true,
+}).toArray();
+```
+
+We get the result:
+
+```js
+[ { _id: 3 } ]
+```
+
+## We can also find by Array length:
+
+Let's consider we have a collection `resumes`,
+
+```js
+db.resumes.insertMany([
+  {
+    _id: 1,
+    projects: ["java", "c++"]
+  },
+  {
+    _id: 2,
+    projects: ["java", "c++", "python"]
+  },
+  {
+    _id: 3,
+    projects: ["c"]
+  }
+  {
+    _id: 4,
+    projects: ["c", "c++"]
+  },
+  {
+    _id: 5,
+    projects: ["python", "javascript", "html"]
+  },
+  {
+    _id: 6,
+    projects: ["golang"]
+  }
+]);
+```
+
+### Find the resumes with 2 projects:
+
+```js
+db.resumes.find({
+  projects: { $size: 2 }
+}).toArray();
+```
+
+We will find,
+
+```js
+[
+  { _id: 1, projects: [ 'java', 'c++' ] },
+  { _id: 4, projects: [ 'c', 'c++' ] }
+]
+```
+
+### What is we want the find the resumes with minimum 2 projects
+
+```js
+db.resumes.find({
+  $expr: {
+    $gte: [{ $size: "$projects" }, 2],
+  }
+}).toArray();
+```
+
+We get the result as,
+
+```js
+[
+  { _id: 1, projects: [ 'java', 'c++' ] },
+  { _id: 2, projects: [ 'java', 'c++', 'python' ] },
+  { _id: 4, projects: [ 'c', 'c++' ] },
+  { _id: 5, projects: [ 'python', 'javascript', 'html' ] }
+]
+```
+
+For more `$expr` information please read the [documentation](https://www.mongodb.com/docs/manual/reference/operator/query/expr/).

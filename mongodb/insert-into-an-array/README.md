@@ -1,9 +1,9 @@
 # Insert into an array
 
-Let's consider we have documents that look like this,
+Let's consider we have documents `courses` that look like this,
 
 ```js
-[
+db.courses.insertMany([
   {
     _id: ObjectId('68af241dcc1c228aac6e44ee'),
     name: "1st year",
@@ -19,7 +19,7 @@ Let's consider we have documents that look like this,
     name: "final year",
     courses: ["c"],
   }
-]
+]);
 ```
 
 ## We want to add `c++` on 2nd year
