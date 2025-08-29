@@ -78,7 +78,7 @@ The result will be,
     {
       grade: 85,
       mean: 90,
-      std: 12
+      std: 11
     },
     {
       grade: 85,
@@ -89,9 +89,9 @@ The result will be,
 }
 ```
 
-If you noticed, only the 2nd object in the `grades` array is updated. But, the 3rd object also has **{ grade: 85 }**. So, to make sure all the array objects are updated we must use `arrayFilter`.
+If you noticed, only the 2nd object in the `grades` array is updated. But, the 3rd object also has **{ grade: 85 }**. So, to make sure all the array objects are updated we must use `arrayFilters`.
 
-### How to use `arrayFilter` to update every matched object in an array
+### How to use `arrayFilters` to update every matched object in an array
 
 ```js
 db.students.updateMany({
