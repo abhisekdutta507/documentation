@@ -5,9 +5,10 @@ The Primitive/Value types are as follows,
   * Number
   * String
   * Boolean
+  * BigInt
   * Symbol
-  * undefined
-  * null
+  * Undefined
+  * Null
 
 ## What are Object/Reference Types in JavaScript?
 
