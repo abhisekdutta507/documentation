@@ -98,47 +98,44 @@ console.log(counter.#count);      // SyntaxError: Private field '#count' must be
 
 The answer should be **no**. Private variables should not be directly accessible from outside the class. But with **WeakMap** we can actually change the value from outside the class.
 
-```js
-const privateData = new WeakMap();
-
+```ts
 class Counter {
-  constructor() {
-    privateData.set(this, { count: 0 });
-  }
+  privateField: WeakMap<object, { count: number }>;
 
-  increment() {
-    const data = privateData.get(this);
-    return ++data.count;
-  }
-
-  decrement() {
-    const data = privateData.get(this);
-    return --data.count;
+  constructor(_c: number) {
+    this.privateField = new WeakMap();
+    this.privateField.set(this, { count: _c });
   }
 
   getCount() {
-    const data = privateData.get(this);
-    return data.count;
+    const field = this.privateField.get(this) || { count: 0 };
+    return field.count;
+  }
+
+  increment() {
+    const field = this.privateField.get(this) || { count: 0 };
+    return ++field.count;
+  }
+
+  decrement() {
+    const field = this.privateField.get(this) || { count: 0 };
+    return --field.count;
   }
 }
 
-const counter = new Counter();
+const counter = new Counter(0);
 console.log(counter.increment()); // 1
 console.log(counter.increment()); // 2
 console.log(counter.increment()); // 3
 console.log(counter.decrement()); // 2
 console.log(counter.getCount());  // 2
-console.log(counter.count);       // undefined
-console.log(privateData);         // WeakMap { <items unknown> }
+console.log(counter.privateField);         // WeakMap { <items unknown> }
 ```
 
 #### How do we change the count from outside the class?
 
 ```ts
-const privateData = new WeakMap();
-const counter = new Counter();
-
-const data = privateData.get(counter);
-data.count = 10;
+const counter = new Counter(0);
+counter.privateField.set(counter, { count: 10 });
 console.log(counter.getCount());  // 10
 ```
