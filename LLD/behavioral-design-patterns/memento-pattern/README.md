@@ -92,92 +92,85 @@ mementoPattern();
 
 ## Solution
 
-In Memento Pattern we breakdown the `class Editor` into `class EditorState` & `class EditStateStack`.
+In Memento Pattern we breakdown the `class Editor` into `class EditorState` & `class StateHistory`.
 
 ```ts
 interface IEditorState {
   name: string;
-  mobile: number;
-  email: string;
+  age?: number;
+  email?: string;
+  mobile?: string;
 }
 
 class Editor {
   #state: EditorState;
-  #stack: EditStateStack;
+  #history: StateHistory;
 
-  constructor(state: EditorState) {
-    this.#state = state;
-    this.#stack = new EditStateStack();
+  constructor(state: IEditorState) {
+    this.#state = new EditorState(state);
+    this.#history = new StateHistory();
   }
 
-  set state(state: EditorState) {
-    this.#stack.push(this.#state);
-    this.#state = state;
+  set state(state: IEditorState) {
+    this.#history.push(this.#state);
+    this.#state = new EditorState(state);
   }
 
-  get state(): IEditorState {
-    return {
-      name: this.#state.name,
-      mobile: this.#state.mobile,
-      email: this.#state.email,
-    };
+  get state() {
+    return this.#state.state;
   }
 
   undo() {
-    if (!this.#stack.isEmpty) 
-      this.#state = this.#stack.pop() as EditorState;
+    if (!this.#history.isEmpty) {
+      this.#state = this.#history.pop() as EditorState;
+    }
   }
 }
+```
 
+Let's understand the `class EditorState`.
+
+```ts
 class EditorState {
-  #name: string;
-  #mobile: number;
-  #email: string;
+  #state: IEditorState;
 
   constructor(state: IEditorState) {
-    this.#name = state.name;
-    this.#mobile = state.mobile;
-    this.#email = state.email;
+    this.#state = state;
   }
 
-  get name() {
-    return this.#name;
+  set state(state: IEditorState) {
+    this.#state = state;
   }
 
-  set name(name: string) {
-    this.#name = name;
-  }
-
-  get mobile() {
-    return this.#mobile;
-  }
-
-  set mobile(mobile: number) {
-    this.#mobile = mobile;
-  }
-
-  get email() {
-    return this.#email;
-  }
-
-  set email(email: string) {
-    this.#email = email;
+  get state() {
+    return this.#state;
   }
 }
+```
 
-class EditStateStack {
-  #stack: EditorState[] = [];
+Let's understand the `class StateHistory`.
+
+```ts
+class StateHistory {
+  #history: EditorState[];
+
+  constructor() {
+    this.#history = [];
+  }
 
   push(state: EditorState) {
-    this.#stack.push(state);
+    this.#history.push(state);
+  }
+
+  get isEmpty() {
+    return this.#history.length === 0;
   }
 
   pop() {
-    return this.#stack.pop();
-  }
-
-  get isEmpty(): boolean {
-    return this.#stack.length === 0;
+    if (!this.isEmpty) {
+      return this.#history.pop();
+    }
+    return undefined;
   }
 }
 ```
@@ -186,21 +179,24 @@ The usage will be simple,
 
 ```ts
 function mementoPattern() {
-  const editor = new Editor(new EditorState({
+  const editor = new Editor({
     name: "",
     mobile: 0,
-    email: ""
-  }));
-  editor.state = new EditorState({
+    email: "",
+    mobile: ""
+  });
+  editor.state = {
     name: "Abhisek Dutta",
     mobile: 876543210,
-    email: ""
-  });
-  editor.state = new EditorState({
+    email: "",
+    mobile: ""
+  };
+  editor.state = {
     name: "Abhisek Dutta is a programmer",
     mobile: 8765432190,
-    email: "abhisek@email.com"
-  });
+    email: "abhisek@email.com",
+    mobile: ""
+  };
 
   editor.undo();
   editor.undo();
