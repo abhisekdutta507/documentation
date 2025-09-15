@@ -4,11 +4,12 @@ The documentation project contains multiple code snippets incuding project setup
 
 ## Indexes
 
-- [javascript](./javascript/)
-- [mongodb](./mongodb/)
-- [mysql](./mysql/)
-- [reactjs](./reactjs/)
-- [nextjs](./nextjs/)
+- [JavaScript](./javascript/)
+- [React.js](./reactjs/)
+- [Next.js](./nextjs/)
+- [Low Level Design](./LLD/README.md)
+- [MongoDB](./mongodb/)
+- [MySQL](./mysql/)
 
 ## Portfolio
 
