@@ -1,4 +1,9 @@
-### What are Generics in Java?
+# Generics in Java
+
+Generics let classes and methods work with type parameters while keeping type
+checks at compile time. They reduce casting and help catch type mistakes early.
+
+## Generic Classes
 
 #### Generic of Reference Types
 

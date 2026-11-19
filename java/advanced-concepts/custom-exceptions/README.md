@@ -1,4 +1,13 @@
-### Example of Custom Exception
+# Custom Exceptions in Java
+
+A custom exception represents a domain-specific failure that built-in exception
+types do not describe clearly. It makes error handling more meaningful and
+readable in business code.
+
+## Example: Insufficient Funds
+
+This example uses a checked custom exception. The caller must handle it with
+`try-catch` or declare it with `throws`.
 
 ```java
 package com.advancejavatutorials;

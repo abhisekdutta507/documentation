@@ -1,5 +1,6 @@
 # 🚀 Mastering Java Threads and Concurrency
-*A deep dive into multi-threading, synchronization, and advanced concurrency patterns in Java.*
+*A practical guide to threads, synchronization, and concurrency for Java
+interviews.*
 
 The Java `Thread` and `Runtime` classes are fundamental components of the `java.lang` package. They provide the core mechanisms for managing concurrent execution within a Java application.
 ```java
@@ -296,6 +297,16 @@ public class Main {
 }
 
 ```
+
+## Interview Quick Notes
+
+- Use `start()` to begin a thread; do not call `run()` for asynchronous work.
+- Use `join()` to wait until another thread finishes.
+- A race condition occurs when threads read and update shared state at the wrong
+  time.
+- Prefer confinement or immutable state when possible.
+- Use synchronization or atomic classes only for shared mutable state.
+- Virtual threads are useful for large numbers of I/O-bound tasks.
 
 Output
 

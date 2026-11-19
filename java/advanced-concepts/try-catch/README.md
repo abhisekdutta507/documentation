@@ -1,4 +1,9 @@
-### Exception handling in Java
+# Exception Handling with `try-catch`
+
+Use `try-catch-finally` to execute potentially failing code and release
+resources when the operation completes.
+
+## Manual Resource Cleanup
 
 ```java
 package com.javalms.exceptions;

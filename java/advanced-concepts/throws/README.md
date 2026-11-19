@@ -1,6 +1,13 @@
-### What is `throws` in Java?
+# The `throws` Keyword
 
-It forces the caller / user of the methods / classes to use exception handling.
+The `throws` keyword declares an exception that a method may pass to its caller.
+It is used with checked exceptions and moves responsibility from the method
+implementation to the calling code.
+
+## Example
+
+An unchecked exception, such as `IllegalArgumentException`, can fail without a
+compiler requirement to handle it.
 
 Account.java
 

@@ -1,6 +1,14 @@
-### Chaining Multiple Similar Type of Exceptions into One.
+# Exception Chaining
 
-We will replace the `InsufficientFundsException` class with the `AccountException` class. The `AccountException` will wrap all other `Account` related exceptions like `InsufficientFundsException`.
+Exception chaining connects a high-level exception with the original low-level
+exception that caused it. It preserves the root cause and gives applications a
+simple public exception type.
+
+## Wrap Related Exceptions
+
+In this example, `AccountException` wraps account-related failures. The caller
+handles one domain exception, while `getCause()` provides the original cause.
+
 
 Main.java
 

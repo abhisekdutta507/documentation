@@ -1,32 +1,37 @@
-### What is an Exception in Java?
+# Exceptions in Java
 
+An **exception** is an event that interrupts normal program execution. Java
+groups exceptions and errors into a clear hierarchy so code can handle failures
+predictably.
 
-#### How many types of Exception is there?
+## Types of Exceptions
 
-There are 3 types of Exceptions,
- - Checked (Exception)
- - Unchecked (RuntimeException)
- - Error
+| Type | Base class | Typical examples | How it is handled |
+|---|---|---|---|
+| Checked exception | `Exception` | `IOException`, `SQLException` | Must be handled or declared |
+| Unchecked exception | `RuntimeException` | `NullPointerException`, `ArithmeticException` | Optional handling |
+| Error | `Error` | `OutOfMemoryError`, `StackOverflowError` | Usually not application-handled |
 
-#### Example of Checked Exceptions
+## Checked Exceptions
 
- - FileNotFoundExceptio
+Checked exceptions represent recoverable conditions that the compiler requires
+you to handle or propagate. Examples include `FileNotFoundException`,
+`IOException`, and `ParseException`.
 
+## Unchecked Exceptions
 
-#### Example of Runtime Exceptions
+Unchecked exceptions usually indicate programming mistakes or invalid runtime
+conditions. Examples include:
 
- - NullPointerException
- - ArithmeticException
- - IllegalArgumentException
- - IndexOutOfBoundsException
- - IllegalStateException
+- `NullPointerException`
+- `ArithmeticException`
+- `IllegalArgumentException`
+- `IndexOutOfBoundsException`
+- `IllegalStateException`
 
-#### Example of Error
+## Handling Multiple Exceptions
 
- - StackOverflow
- - OutOfMemory
-
-#### Multiple Exceptions can be handled at once
+Use separate `catch` blocks when each exception needs different handling.
 
 ```java
 try {
