@@ -1,4 +1,5 @@
-Index
+# ☕ Java Fundamentals: Core Concepts Master Guide
+*A comprehensive, deep-dive index covering the essential building blocks of Java. This guide is designed for interview preparation, focusing on key concepts like data types, memory management, and standard library usage.*
 - [Variables in Java](/java/variables-in-java/README.md)
 - [Primitives vs Reference](/java/primitive-type-vs-reference-type/README.md)
 - [String](/java/string-type/README.md)

@@ -1,4 +1,5 @@
-# What is Scanner class?
+# 📥 The Scanner Class in Java: Robust Input Handling
+*A guide to using the `java.util.Scanner` class for reading user input. This is a crucial skill for creating console-based Java applications.*
 
 ```java
 import java.util.Scanner;

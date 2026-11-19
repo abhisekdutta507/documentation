@@ -1,4 +1,5 @@
-What are variables in Java?
+# 💡 Variables in Java: Declaration, Scope, and Data Types
+*A fundamental topic covering the difference between primitive types and reference types, crucial for understanding memory management in Java.*
 byte, short, int, long, float, double, char, String, boolean, var
 
 Example

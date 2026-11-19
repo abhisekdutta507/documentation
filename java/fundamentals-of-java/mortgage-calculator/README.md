@@ -1,4 +1,5 @@
-### Mortgage Calculator Console Application
+# 💳 Mortgage Calculator: A Practical Java Financial Tool
+*A complete console application demonstrating input validation, complex financial calculations, and formatted output in Java.*
 
 ```sh
 Principal: 10000

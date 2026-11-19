@@ -1,4 +1,5 @@
-### What is String in Java?
+# 💎 The String Class in Java: Immutability and Memory
+*A deep dive into Java's `String` type, covering its reference nature, the String Pool mechanism, and the crucial difference between string literals and string objects.*
 
 `String` is a reference type. Specifically, it is a built-in class `java.lang.String` provided by the Java standard library.
 

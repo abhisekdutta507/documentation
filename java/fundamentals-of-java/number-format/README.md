@@ -1,4 +1,5 @@
-# How to use a number format?
+# 💰 NumberFormat in Java: Localized Number Display
+*A guide to using the `NumberFormat` class from `java.text`. Master this to correctly format numbers (like currency) based on a specified locale, a common requirement in professional Java development.*
 
 The class NumberFormat is imported from `java.text` package.
 

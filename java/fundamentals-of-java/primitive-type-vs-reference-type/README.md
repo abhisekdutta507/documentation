@@ -1,4 +1,5 @@
-What is Primitive in Java?
+# 🧩 Primitives vs. Reference Types in Java
+*A critical concept in Java programming. Understand the core differences, memory allocation, and performance implications for technical interviews.*
 Type | Size | Range
 byte | 1 byte | [-128, 127]
 short | 2 byte | [-32k, 32k]

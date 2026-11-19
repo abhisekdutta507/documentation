@@ -1,4 +1,5 @@
-What is an Array in Java?
+# 📦 Mastering Arrays in Java
+*A comprehensive guide to declaring, initializing, and manipulating arrays in Java.*
 
 ```java
 package com.javalms;
@@ -36,7 +37,8 @@ Output:
 [2, 3, 5, 1, 4]
 ```
 
-### Sort the Array elements
+## ⚙️ Array Manipulation: Sorting Elements
+This section demonstrates how to utilize built-in Java methods, such as `Arrays.sort()`, to order the elements of an array.
 
 ```java
 import java.util.Arrays;

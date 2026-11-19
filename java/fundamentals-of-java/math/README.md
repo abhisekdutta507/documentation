@@ -1,4 +1,5 @@
-### What is Math class in Java?
+# 🧮 The Math Class in Java: Precision and Randomness
+*A deep dive into the `java.lang.Math` class, focusing on mathematical functions (like rounding and ceiling) and generating random values.*
 
 
 ```java
