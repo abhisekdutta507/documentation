@@ -1,0 +1,11 @@
+Index
+- [Exceptions](/java/advanced-concepts/exceptions/README.md)
+- [try-catch](/java/advanced-concepts/try-catch/README.md)
+- [try-with-resources](/java//advanced-concepts/try-catch/README.md#simplify-the-syntax-using-try-with-resources-block)
+- [throws](/java/advanced-concepts/throws/README.md)
+- [Custom Exceptions](/java/advanced-concepts/custom-exceptions/README.md)
+- [Exceptions Chaining](/java/advanced-concepts/exceptions-chaining/README.md)
+- [Generics](/java/advanced-concepts/generics/README.md)
+- [Collection](/java/advanced-concepts/collection/README.md)
+- [Lambda Expressions & Functional Interfaces](/java/advanced-concepts/lambda-expressions-and-functional-interfaces/README.md)
+- [Thread Pool](/java/advanced-concepts/thread-pool/README.md)
