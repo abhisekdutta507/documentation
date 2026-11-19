@@ -836,30 +836,20 @@ package com.advancejavatutorials.concurrency;
 
 public class DownloadStatus {
     private int totalBytes;
-    private int remainingTasks;
 
-    public DownloadStatus(int taskCount) {
-        remainingTasks = taskCount;
+    public void done() {
+        done = true;
     }
 
-    public synchronized void incrementTotalBytes() {
+    public void incrementTotalBytes() {
         totalBytes++;
     }
 
-    public synchronized void taskCompleted() {
-        remainingTasks--;
-        if (remainingTasks == 0) {
-            notifyAll();
-        }
+    public boolean isDone() {
+        return done;
     }
 
-    public synchronized void waitForCompletion() throws InterruptedException {
-        while (remainingTasks > 0) {
-            wait();
-        }
-    }
-
-    public synchronized int getTotalBytes() {
+    public int getTotalBytes() {
         return totalBytes;
     }
 }
@@ -872,13 +862,21 @@ DownloadManager.java
 ```java
 package com.advancejavatutorials.concurrency;
 
-public record DownloadManager(DownloadStatus status) implements Runnable {
+public record DownloadManager(int index, DownloadStatus status) implements Runnable {
+
     @Override
     public void run() {
-        for (int i = 0; i < 1_000_000; i++) {
+        System.out.println("\n===================\n\nTask index: " + index + " | Tread name: " + Thread.currentThread().getName() + " | No. of threads in use: " + Thread.activeCount());
+
+        for (int i = 0; i < 10_00_000; i++) {
             status.incrementTotalBytes();
         }
-        status.taskCompleted();
+
+        status.done();
+
+        synchronized (status) {
+            status.notifyAll();
+        }
     }
 }
 ```
@@ -894,24 +892,54 @@ import com.advancejavatutorials.concurrency.DownloadManager;
 import com.advancejavatutorials.concurrency.DownloadStatus;
 
 public class Main {
-    static void main() throws InterruptedException {
-        var status = new DownloadStatus(2);
-        var threadA = new Thread(new DownloadManager(status));
-        var threadB = new Thread(new DownloadManager(status));
+    static void main() {
+        var status = new DownloadStatus();
+        var threadA = new Thread(new DownloadManager(0, status));
+        var threadB = new Thread(new DownloadManager(1, status));
+
+        var threadC = new Thread(() -> {
+            while(!status.isDone()) {
+                System.out.println("Waiting for signal in " + Thread.currentThread().getName());
+
+                synchronized (status) {
+                    try {
+                        status.wait();
+                    } catch (InterruptedException e) {
+                        // ...
+                    }
+                }
+            }
+            System.out.println("\nDownloaded file size @ line: 1: " + status.getTotalBytes());
+        });
 
         threadA.start();
         threadB.start();
+        threadC.start();
 
-        status.waitForCompletion();
-        System.out.println("Downloaded file size: " + status.getTotalBytes());
+        System.out.println("\nDownloaded file size @ line: 2: " + status.getTotalBytes());
     }
 }
 ```
 
 Output:
 
-```text
-Downloaded file size: 2000000
+1. The text `Waiting for signal in ...` will be printed first.
+2. `Downloaded file size @ line: 2: ...` will be printed next as there is no waiting for the threads to be executed.
+
+```txt
+Waiting for signal in Thread-2
+
+Downloaded file size @ line: 2: 0
+
+===================
+
+Task index: 1 | Tread name: Thread-1 | No. of threads in use: 5
+
+===================
+
+Task index: 0 | Tread name: Thread-0 | No. of threads in use: 5
+
+Downloaded file size @ line: 1: 892175
 ```
 
 **Remember:** Check the condition in a `while` loop while holding the same monitor. This avoids missed notifications and handles spurious wakeups. The counter also uses synchronization, so concurrent increments are not lost.
