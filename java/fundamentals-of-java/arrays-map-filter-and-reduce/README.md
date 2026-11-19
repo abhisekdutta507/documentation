@@ -88,6 +88,22 @@ Output:
 55
 ```
 
+### 🔗 Method Reference and Lambda Equivalent
+
+`Integer::sum` is a method reference: a shorter way to refer to the existing `sum` method. It does the same work as the lambda expression `(a, b) -> a + b`.
+
+```java
+var sumOfItems = Arrays.stream(items)
+    .reduce(0, Integer::sum);
+```
+
+The equivalent lambda expression is:
+
+```java
+var sumOfItems = Arrays.stream(items)
+    .reduce(0, (a, b) -> a + b);
+```
+
 ### 🧠 Interview Reminder
 
 - **`map` transforms** each item.
