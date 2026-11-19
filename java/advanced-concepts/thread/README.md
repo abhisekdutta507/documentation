@@ -824,3 +824,94 @@ Task index: 0 | Tread name: Thread-0 | No. of threads in use: 5
 Downloaded file size @ line: 1: 1000753
 
 ```
+
+### 📣 Wait for a Condition with `wait()` and `notifyAll()`
+
+Use `wait()` to pause until a condition changes, then use `notifyAll()` to wake waiting threads. Both methods must be called while holding the same object's monitor. In this example, the main thread waits until both download tasks finish.
+
+DownloadStatus.java
+
+```java
+package com.advancejavatutorials.concurrency;
+
+public class DownloadStatus {
+    private int totalBytes;
+    private int remainingTasks;
+
+    public DownloadStatus(int taskCount) {
+        remainingTasks = taskCount;
+    }
+
+    public synchronized void incrementTotalBytes() {
+        totalBytes++;
+    }
+
+    public synchronized void taskCompleted() {
+        remainingTasks--;
+        if (remainingTasks == 0) {
+            notifyAll();
+        }
+    }
+
+    public synchronized void waitForCompletion() throws InterruptedException {
+        while (remainingTasks > 0) {
+            wait();
+        }
+    }
+
+    public synchronized int getTotalBytes() {
+        return totalBytes;
+    }
+}
+```
+
+Each task updates the shared counter and signals that it has completed:
+
+DownloadManager.java
+
+```java
+package com.advancejavatutorials.concurrency;
+
+public record DownloadManager(DownloadStatus status) implements Runnable {
+    @Override
+    public void run() {
+        for (int i = 0; i < 1_000_000; i++) {
+            status.incrementTotalBytes();
+        }
+        status.taskCompleted();
+    }
+}
+```
+
+The main thread starts both tasks, then waits for their shared completion condition:
+
+Main.java
+
+```java
+package com.advancejavatutorials;
+
+import com.advancejavatutorials.concurrency.DownloadManager;
+import com.advancejavatutorials.concurrency.DownloadStatus;
+
+public class Main {
+    static void main() throws InterruptedException {
+        var status = new DownloadStatus(2);
+        var threadA = new Thread(new DownloadManager(status));
+        var threadB = new Thread(new DownloadManager(status));
+
+        threadA.start();
+        threadB.start();
+
+        status.waitForCompletion();
+        System.out.println("Downloaded file size: " + status.getTotalBytes());
+    }
+}
+```
+
+Output:
+
+```text
+Downloaded file size: 2000000
+```
+
+**Remember:** Check the condition in a `while` loop while holding the same monitor. This avoids missed notifications and handles spurious wakeups. The counter also uses synchronization, so concurrent increments are not lost.
