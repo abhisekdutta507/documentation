@@ -1,15 +1,14 @@
-## What is a Thread?
+# 🚀 Mastering Java Threads and Concurrency
+*A deep dive into multi-threading, synchronization, and advanced concurrency patterns in Java.*
 
-The `Thread` & `Runtime` classes are declared in `java.lang` package.
-
+The Java `Thread` and `Runtime` classes are fundamental components of the `java.lang` package. They provide the core mechanisms for managing concurrent execution within a Java application.
 ```java
 System.out.println(Thread.activeCount()); // No. of threads used by the current process. By default it is the main thread & the garbage collector.
 System.out.println(Runtime.getRuntime().availableProcessors()); // Total no. of available threads in the system.
 ```
 
-### Start a task in thread
-
-The class must implement the `Runnable` interface.
+## 🛠️ Task Execution: Starting Threads with Runnable
+To initiate a concurrent task, the class must implement the `Runnable` interface. This mechanism allows the thread to execute custom logic.
 
 ```java
 package com.advancejavatutorials.concurrency;
@@ -43,7 +42,8 @@ Output
 Downloading file. Thread: Thread-0
 ```
 
-### Wait for a thread to complete it's work
+## ⏳ Thread Lifecycle Management: Waiting for Completion
+The `join()` method is crucial for controlling the main thread's flow, ensuring that the application waits until the spawned thread finishes its execution before proceeding.
 
 Main.java
 
@@ -75,11 +75,10 @@ Downloading file. Thread: Thread-0
 Files are ready to be scanned. Thread: main
 ```
 
-### Concurrency Issues
+## ⚠️ Concurrency Challenges: Race Conditions
+A race condition occurs when multiple threads concurrently access and modify a shared resource, leading to an unpredictable or incorrect final state. This can result in data corruption or application crashes.
 
-When multiple threads are trying to modify the same object we might not get the expected result or the application might crash. We call this situation a race condition.
-
-#### Example of a Race Condition
+### A Practical Example: Race Conditions in Action
 
 We will run 10 download tasks & each tasks will download 10_000 bytes. So, the final downloaded size will be 100_000 bytes. But due to race condition multiple threads are trying to perform `Non Atomic Operation` (Reading -> Updating -> Storing the updated totalBytes in memory).
 
@@ -193,15 +192,16 @@ Available Processors: 10
 Code flow is completed. Total downloaded size: 48435
 ```
 
-#### Thread Safety Strategy
+## 🛡️ Thread Safety Strategies
+To prevent concurrency issues, developers employ several strategies:
 
- - Confinement
- - Immutability -> Locks
- - Synchronization -> Thread signaling with wait() & notify()
- - Atomic Objects
- - Partitioning
+- **Confinement**: Ensuring an object is accessed by only one thread.
+- **Immutability** $\rightarrow$ **Locks**: Using immutable state combined with synchronization mechanisms.
+- **Synchronization**: Coordinating threads using signaling (e.g., `wait()` and `notify()`).
+- **Atomic Objects**: Using specialized classes to guarantee atomic operations.
+- **Partitioning**: Dividing a resource among multiple threads.
 
-##### Fix the Race Condition using Confinement Strategy
+### Implementing Confinement Strategy to Fix Race Conditions
 
 Instead of a single DownloadStatus instance we will created different DownloadStatus instance for each DownloadManager instance.
 
@@ -343,4 +343,71 @@ Task index: 9 | Tread name: Thread-9 | No. of threads in use: 12
 Task index: 8 | Tread name: Thread-8 | No. of threads in use: 11
 
 Downloaded file size: 100,000 bytes
+```
+
+### Implement Virtual Threads and Bounded Concurrency
+
+Main.java
+
+```java
+package com.advancejavatutorials;
+
+import com.advancejavatutorials.concurrency.DownloadManager;
+
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.Semaphore;
+
+public class Main {
+    private static final int TOTAL_DOWNLOADS = 5_000;
+    private static final int MAX_CONCURRENT_DOWNLOADS = 2_500;
+
+    static void main() {
+        System.out.println("Available Processors: " + Runtime.getRuntime().availableProcessors());
+
+        Semaphore downloadLimiter = new Semaphore(MAX_CONCURRENT_DOWNLOADS);
+        List<DownloadManager> tasks = new ArrayList<>(TOTAL_DOWNLOADS);
+        List<Future<?>> futures = new ArrayList<>(TOTAL_DOWNLOADS);
+
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            for (int i = 0; i < TOTAL_DOWNLOADS; i++) {
+                var task = new DownloadManager(i);
+                tasks.add(task);
+
+                futures.add(executor.submit(() -> {
+                    downloadLimiter.acquire();
+                    try {
+                        task.run();
+                    } finally {
+                        downloadLimiter.release();
+                    }
+                    return null;
+                }));
+            }
+
+            for (Future<?> future : futures) {
+                try {
+                    future.get();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                } catch (ExecutionException e) {
+                    System.err.println("Download task failed: " + e.getCause());
+                }
+            }
+        }
+
+        long totalBytes = tasks.stream()
+            .mapToLong(task -> task.getDownloadStatus().getTotalBytes())
+            .sum();
+
+        String formattedTotalBytes = NumberFormat.getNumberInstance().format(totalBytes);
+        System.out.println("\nDownloaded file size: " + formattedTotalBytes + " bytes");
+    }
+}
+
 ```
