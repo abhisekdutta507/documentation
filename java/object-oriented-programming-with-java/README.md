@@ -18,6 +18,7 @@ Learn how Java classes and objects work together to make code easier to reuse, c
 - [Method Overloading](./method-overloading/README.md) — Use one method name with different parameter lists.
 - [Abstract Classes](./abstract-classes/README.md) — Share common code while leaving some behavior to subclasses.
 - [Interfaces](./interface/README.md) — Describe behaviors that different classes can provide.
+- [Abstract Class vs Interface](./difference-between-abstract-class-and-interface/README.md) — Compare their features, examples, and best use cases.
 
 ## 🛠️ Design Better Classes
 
