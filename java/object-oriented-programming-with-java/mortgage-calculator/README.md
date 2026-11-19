@@ -1,4 +1,6 @@
-### Mortgage Calculator Console Application
+# 🏠 Mortgage Calculator: OOP in Practice
+
+This console example brings several OOP ideas together: a calculator handles the mortgage math, a report displays the results, and the main program connects the pieces.
 
 ```sh
 Principal: 10000

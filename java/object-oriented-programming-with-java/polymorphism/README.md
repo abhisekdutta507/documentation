@@ -1,4 +1,10 @@
 
+# 🎭 Polymorphism in Java
+
+Polymorphism lets different classes be used through the same parent type. When an overridden method is called, Java runs the version for the object's actual class.
+
+## Example: One Parent Type, Different Results
+
 Main.java
 
 ```java

@@ -1,4 +1,6 @@
-### What is a Class in Java?
+# 🧱 Classes and Objects in Java
+
+A **class** describes the data and actions its objects can have. An **object** is one instance of that class. This example uses an `Employee` class to store salary details and calculate wages.
 
 #### Main Class
 

@@ -1,6 +1,6 @@
-### What is Method Overloading in Java?
+# 🔁 Method Overloading in Java
 
-Method overloading happens when a class has multiple methods with the same name but a different signature (differing in the number, type, or order of their parameters).
+Method overloading lets a class use the same method name for related actions with different parameter lists. Java chooses which version to call based on the arguments.
 
 ```java
 public class Employee {
@@ -24,3 +24,7 @@ public class Employee {
     }
 }
 ```
+
+### 🧠 Interview Reminder
+
+Overloaded methods must differ by their parameters (number, types, or order). A different return type alone is not enough.

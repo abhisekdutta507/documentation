@@ -1,6 +1,8 @@
-### Display only the required methods
+# 🎭 Abstraction and Coupling in Java
 
-From the main method we can access only the `calculateWage` method of the `employee` object.
+Abstraction gives callers a simple way to use an object while hiding how it works inside. In this example, callers use `calculateWage` without accessing or changing the employee's private salary details. This keeps callers focused on the operation instead of its implementation.
+
+## Display Only the Needed Method
 
 ```java
 package com.javalms;

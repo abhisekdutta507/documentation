@@ -1,4 +1,6 @@
-### What is Dependency Injection?
+# 🔌 Dependency Injection in Java
+
+Dependency injection means giving an object the helper objects it needs instead of making it create them itself. This keeps classes loosely connected and makes it easier to replace or test a dependency.
 
 Example of a dependant classes.
 

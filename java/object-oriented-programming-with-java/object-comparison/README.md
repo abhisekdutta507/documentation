@@ -1,5 +1,9 @@
 
-We have 2 Point instances. But when we compare the instances we get `false` as both the reference has different addresses in memory. So, we will override the `equals` method.
+# ⚖️ Comparing Objects in Java
+
+`==` checks whether two references point to the same object. To compare object values, override `equals`; also override `hashCode` so equal objects work correctly in hash-based collections.
+
+The two `Point` objects below have the same coordinates but are separate objects. The `equals` method compares those values.
 
 ```java
 package com.javalms;
@@ -9,7 +13,7 @@ public class Main {
         var pointA = new Point(1, 2);
         var pointB = new Point(1, 2);
 
-        System.out.println(pointA.equals(pointA));
+        System.out.println(pointA.equals(pointB));
     }
 }
 ```

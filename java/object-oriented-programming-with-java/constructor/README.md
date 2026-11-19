@@ -1,5 +1,6 @@
-### Example of a Contructor
+# 🏗️ Constructors in Java
 
+A constructor runs when you create an object. Use it to give the object its starting values. A constructor has the same name as its class and no return type.
 
 ```java
 package com.javalms;

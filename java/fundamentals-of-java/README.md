@@ -6,6 +6,7 @@
 - [Constant](/java/fundamentals-of-java/constants/README.md)
 - [Type Casting](/java/fundamentals-of-java/casting-and-type-convertion/README.md)
 - [Arrays](/java/fundamentals-of-java/arrays/README.md)
+- [Map & Reduce](/java/fundamentals-of-java/map-and-reduce/README.md)
 - [Math](/java/fundamentals-of-java/math/README.md)
 - [NumberFormat](/java/fundamentals-of-java/number-format/README.md)
 - [Scanner](/java/fundamentals-of-java/scanner/README.md)

@@ -1,6 +1,6 @@
-### What is Interface Segregation Principle?
+# 🧩 Interface Segregation Principle in Java
 
-One interface should not be handling all the responsibilities. Instead, there should be multiple interfaces handling different, smaller responsibilities.
+The Interface Segregation Principle (ISP) says that a class should not have to implement methods it does not use. Prefer small interfaces that each describe one focused job.
 
 #### Why do we need Interface Segregation?
 - Break down Complex interfaces into smaller interfaces

@@ -1,4 +1,10 @@
 
+# 🌳 Inheritance in Java
+
+Inheritance lets a class reuse and extend the behavior of another class. `TextBox` inherits the shared enabled-state behavior from `UIControl` and adds text-related behavior of its own.
+
+## Example: A Text Box Is a UI Control
+
 UIControl.java
 
 ```java

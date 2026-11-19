@@ -1,6 +1,6 @@
-### What is an Interface in Java?
+# 📜 Interfaces in Java
 
-An Interface is a blueprint defining a specific set of behaviors a class must implement. It specifies what a class should do, but not how it should do it.
+An interface describes behavior a class agrees to provide. It says what the class can do, while the implementing class supplies the behavior.
 
 ```java
 package com.javalms;
