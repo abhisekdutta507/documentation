@@ -943,3 +943,137 @@ Downloaded file size @ line: 1: 892175
 ```
 
 **Remember:** Check the condition in a `while` loop while holding the same monitor. This avoids missed notifications and handles spurious wakeups. The counter also uses synchronization, so concurrent increments are not lost.
+
+### ⚛️ Use Atomic Classes for Thread-Safe Updates
+
+Atomic classes provide thread-safe operations on individual values without an explicit lock. Here, `AtomicInteger` protects the shared counter, while `AtomicBoolean` safely records whether a task has finished.
+
+DownloadStatus.java
+
+```java
+package com.advancejavatutorials.concurrency;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class DownloadStatus {
+    private final AtomicBoolean done = new AtomicBoolean();
+    private final AtomicInteger totalBytes = new AtomicInteger();
+
+    public void done() {
+        done.getAndSet(true);
+    }
+
+    public void incrementTotalBytes() {
+        totalBytes.incrementAndGet();
+    }
+
+    public boolean isDone() {
+        return done.get();
+    }
+
+    public int getTotalBytes() {
+        return totalBytes.get();
+    }
+}
+
+```
+
+Each worker increments the same atomic counter. When a worker finishes, it sets the shared flag; the flag therefore means **at least one task has finished**, not that all tasks are complete.
+
+DownloadManager.java
+
+```java
+package com.advancejavatutorials.concurrency;
+
+public record DownloadManager(int index, DownloadStatus status) implements Runnable {
+
+    @Override
+    public void run() {
+        System.out.println("\n===================\n\nTask index: " + index + " | Tread name: " + Thread.currentThread().getName() + " | No. of threads in use: " + Thread.activeCount());
+
+        for (int i = 0; i < 10_000; i++) {
+            status.incrementTotalBytes();
+        }
+
+        status.done();
+    }
+}
+
+```
+
+The main method starts three workers and a monitor thread. The monitor prints a snapshot after it sees the flag, while the main thread prints the final total after all workers are joined.
+
+Main.java
+
+```java
+package com.advancejavatutorials;
+
+import com.advancejavatutorials.concurrency.DownloadManager;
+import com.advancejavatutorials.concurrency.DownloadStatus;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+    static void main() {
+        var status = new DownloadStatus();
+        List<Thread> threads = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) {
+            var task = new DownloadManager(i, status);
+            var thread = new Thread(task);
+            threads.add(thread);
+
+            thread.start();
+        }
+
+        var threadC = createThreadC(status);
+
+        for (var thread : threads) {
+            try {
+                thread.join();
+                threadC.join();
+            } catch (InterruptedException e) {
+                // ...
+            }
+        }
+
+        System.out.println("\nDownloaded file size @ line: 2: " + status.getTotalBytes());
+    }
+
+    private static Thread createThreadC(DownloadStatus status) {
+        var threadC = new Thread(() -> {
+            while(!status.isDone()) {}
+            System.out.println("\nDownloaded file size @ line: 1: " + status.getTotalBytes() + " | At least 1 task is completed & marked the status done");
+        });
+
+        threadC.start();
+        return threadC;
+    }
+}
+
+```
+
+The first total can vary because it is read after only one worker finishes. The final total is `30,000` after all three workers complete.
+
+Output:
+
+```txt
+
+===================
+
+Task index: 2 | Tread name: Thread-2 | No. of threads in use: 5
+
+===================
+
+Task index: 1 | Tread name: Thread-1 | No. of threads in use: 5
+
+===================
+
+Task index: 0 | Tread name: Thread-0 | No. of threads in use: 4
+
+Downloaded file size @ line: 1: 28036 | At least 1 task is completed & marked the status done
+
+Downloaded file size @ line: 2: 30000
+```
