@@ -196,19 +196,21 @@ Code flow is completed. Total downloaded size: 48435
 
 ## 🛡️ Keep Shared Data Thread-Safe
 
-Choose a strategy based on whether data is shared and can change:
+The examples below fit into five common strategies:
 
-- **Thread confinement**: Keep mutable state local to one thread, then combine results.
-- **Immutability**: Share objects that cannot change after they are created.
-- **Locks and synchronization**: Protect shared mutable state while it is being changed.
-- **Atomic classes**: Use atomic operations for simple shared values.
-- **Partitioning**: Split data into separate parts so workers can update them independently.
+1. **Thread confinement** — Give each thread its own mutable state. The first example creates a separate status for each task.
+2. **Immutability** — Share values that cannot change after they are created.
+3. **Locks and synchronization** — Protect shared state with `ReentrantLock`, `synchronized`, `volatile`, `wait()`/`notifyAll()`, or thread-safe collections.
+4. **Atomic classes** — Use `AtomicBoolean`, `AtomicInteger`, or `LongAdder` for thread-safe values and counters.
+5. **Partitioning** — Split work into independent parts, then combine the results. The confinement example also shows this approach.
 
-### 🧺 Avoid Sharing Mutable State with Thread Confinement
+### 🧺 1. Thread Confinement: Keep Mutable State Local
 
 Give each task its own `DownloadStatus` instance so threads do not update the same counter.
 
 After the tasks finish, add their counts together.
+
+This also demonstrates partitioning: each task updates its own count, and the main thread combines the results.
 
 DownloadManager.java
 
@@ -300,6 +302,12 @@ public class Main {
 
 ```
 
+**Thread confinement** is about who can access state: one thread owns mutable data, so other threads can’t change it.
+
+**Partitioning** is about how work or data is divided: each worker handles a separate part, then the results are combined.
+
+They often go together. In the example in the *thread README*, each task has its own `DownloadStatus` (**confinement**), and the main thread combines the counts (**partitioning**).
+
 ### 🧠 Interview Quick Notes
 
 - Use `start()` to begin a thread; do not call `run()` for asynchronous work.
@@ -358,7 +366,11 @@ Task index: 8 | Tread name: Thread-8 | No. of threads in use: 11
 Downloaded file size: 100,000 bytes
 ```
 
-### 🚀 Run Many Tasks with Virtual Threads
+### 🧩 2. Immutability: Share State That Does Not Change
+
+An immutable object cannot be changed after it is created, so multiple threads can safely read it without coordinating updates. This is useful for fixed settings or completed results.
+
+### 🚀 Related Topic: Virtual Threads and Bounded Concurrency
 
 Virtual threads make it practical to create many lightweight threads, especially for tasks that wait on I/O. They do not limit how many tasks use a resource at once; this example uses a `Semaphore` for that limit.
 
@@ -427,7 +439,9 @@ public class Main {
 
 ```
 
-### 🔐 Protect a Shared Counter with `ReentrantLock`
+### 🔐 3. Locks and Synchronization
+
+#### Protect a Shared Counter with `ReentrantLock`
 
 Each task now shares one `DownloadStatus`, so its counter must be protected. A `ReentrantLock` makes each increment a critical section.
 
@@ -589,7 +603,7 @@ Task index: 1 | Tread name: Thread-1 | No. of threads in use: 8
 Downloaded file size: 100000
 ```
 
-### 🔒 Protect Shared Data with `synchronized`
+#### Protect Shared Data with `synchronized`
 
 Java's `synchronized` keyword uses an object's monitor to allow only one thread at a time into a protected section using that same monitor.
 
@@ -680,7 +694,7 @@ Task index: 9 | Tread name: Thread-9 | No. of threads in use: 12
 Downloaded file size: 100000
 ```
 
-#### Two Ways to Lock the Same Object
+##### Two Ways to Lock the Same Object
 
 ```java
 public synchronized void incrementTotalBytes() {
@@ -700,7 +714,7 @@ public void incrementTotalBytes() {
 
 Both forms lock the same object (`this`), so threads using that monitor take turns. Separate locks can allow unrelated state to be updated independently, but add complexity and must be used consistently.
 
-### 👁️ Use `volatile` for Visibility, Not Atomicity
+#### Use `volatile` for Visibility, Not Atomicity
 
 `volatile` makes a variable's latest value visible across threads. It does not make compound operations such as `totalBytes++` atomic, so it cannot prevent lost counter updates.
 
@@ -825,7 +839,7 @@ Downloaded file size @ line: 1: 1000753
 
 ```
 
-### 📣 Wait for a Condition with `wait()` and `notifyAll()`
+#### Wait for a Condition with `wait()` and `notifyAll()`
 
 Use `wait()` to pause until a condition changes, then use `notifyAll()` to wake waiting threads. Both methods must be called while holding the same object's monitor. In this example, the main thread waits until both download tasks finish.
 
@@ -944,7 +958,11 @@ Downloaded file size @ line: 1: 892175
 
 **Remember:** Check the condition in a `while` loop while holding the same monitor. This avoids missed notifications and handles spurious wakeups. The counter also uses synchronization, so concurrent increments are not lost.
 
-### ⚛️ Use Atomic Classes for Thread-Safe Updates
+### ⚛️ 4. Atomic Classes
+
+Use atomic classes when multiple threads need to update or read a simple shared value safely.
+
+#### Use Atomic Variables for Thread-Safe Updates
 
 Atomic classes provide thread-safe operations on individual values without an explicit lock. Here, `AtomicInteger` protects the shared counter, while `AtomicBoolean` safely records whether a task has finished.
 
@@ -1076,4 +1094,141 @@ Task index: 0 | Tread name: Thread-0 | No. of threads in use: 4
 Downloaded file size @ line: 1: 28036 | At least 1 task is completed & marked the status done
 
 Downloaded file size @ line: 2: 30000
+```
+
+#### Use `LongAdder` for Busy Counters
+
+`LongAdder` is useful when many threads update the same numeric counter. It reduces contention compared with a single `AtomicInteger`; read the total after the updates finish.
+
+DownloadStatus.java
+
+```java
+package com.advancejavatutorials.concurrency;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.LongAdder;
+
+public class DownloadStatus {
+    private final AtomicBoolean done = new AtomicBoolean();
+    private final LongAdder totalBytes = new LongAdder();
+
+    public void done() {
+        done.set(true);
+    }
+
+    public void incrementTotalBytes() {
+        totalBytes.increment();
+    }
+
+    public boolean isDone() {
+        return done.get();
+    }
+
+    public int getTotalBytes() {
+        return totalBytes.intValue();
+    }
+}
+
+```
+
+`LongAdder` stores the byte count, while `AtomicBoolean` stores the completion flag. Use an atomic type that matches the value you need: `AtomicBoolean` for a flag and `LongAdder` for a heavily updated counter.
+
+### 🔐 Thread-Safe Collections
+
+These collections are also part of the locks and synchronization strategy. A synchronized wrapper protects individual operations; a concurrent collection is designed for access by multiple threads.
+
+#### Use a Synchronized Collection
+
+`Collections.synchronizedCollection` wraps a collection so its individual operations are synchronized. This can be a simple choice for shared collections with light contention.
+
+```java
+package com.advancejavatutorials;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+
+public class Main {
+    static void main() {
+        Collection<Integer> collection = Collections.synchronizedCollection(new ArrayList<>());
+
+        var thread1 = new Thread(() -> {
+            collection.addAll(Arrays.asList(1, 2, 3, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20));
+        });
+
+        var thread2 = new Thread(() -> {
+            collection.addAll(Arrays.asList(4, 5, 6));
+        });
+
+        thread1.start();
+        thread2.start();
+
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (Exception ex) {
+            // ...
+        }
+
+        System.out.println(collection);
+    }
+}
+
+```
+
+Output:
+
+```txt
+[1, 2, 3, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 4, 5, 6]
+```
+
+The order of the two batches can vary because the threads may run in either order. The wrapper synchronizes each operation, which can limit throughput when many threads compete for the same collection. For iteration or a sequence of operations, synchronize on the collection itself.
+
+For heavily shared data, a concurrent collection can allow more operations to proceed at once.
+
+#### Use a Concurrent Map
+
+`ConcurrentHashMap` supports thread-safe map operations when multiple threads read or update the map.
+
+```java
+package com.advancejavatutorials;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class Main {
+    static void main() {
+        Map<Integer, String> map = new ConcurrentHashMap<>();
+
+        var thread1 = new Thread(() -> {
+            map.put(1, "One");
+        });
+
+        var thread2 = new Thread(() -> {
+            map.put(2, "Two");
+        });
+
+        thread1.start();
+        thread2.start();
+
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            // ...
+        }
+
+        System.out.println(map.get(1) + " " + map.get(2));
+    }
+}
+
+```
+
+When multiple threads access a map, use `ConcurrentHashMap` instead of a plain `HashMap` unless access is already protected by a lock.
+
+Output:
+
+```txt
+One Two
 ```
