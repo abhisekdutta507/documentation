@@ -1096,9 +1096,11 @@ Downloaded file size @ line: 1: 28036 | At least 1 task is completed & marked th
 Downloaded file size @ line: 2: 30000
 ```
 
-#### Use `LongAdder` for Busy Counters
+#### Use `LongAdder` & `DoubleAdder` for Busy Counters
 
-`LongAdder` is useful when many threads update the same numeric counter. It reduces contention compared with a single `AtomicInteger`; read the total after the updates finish.
+`LongAdder` and `DoubleAdder` are useful when many threads update shared numeric
+counters. They reduce contention compared with a single atomic counter; read the
+sum after updates finish when you need the total.
 
 DownloadStatus.java
 
