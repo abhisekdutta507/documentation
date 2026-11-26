@@ -4,11 +4,39 @@
 lets you chain asynchronous work. This guide covers creating futures,
 composing and combining tasks, handling failures, and choosing continuations.
 
-## Running a Task with `CompletableFuture`
+## CompletableFuture Methods: Covered and Planned
 
-`CompletableFuture` represents a result that may become available later. Use
-`supplyAsync()` to run a task that produces a value; calling `get()` waits for
-that value and blocks the caller until the task completes.
+- Creating a future
+  - [`supplyAsync()`](#running-a-task-with-supplyasync)
+  - [`runAsync()`](#running-a-task-with-runasync)
+- Methods available on either returned future
+  - [`get()`](#running-a-task-with-supplyasync)
+  - [`join()`](#running-a-task-with-runasync)
+  - `thenRun()`
+  - [`thenRunAsync()`](#chaining-asynchronous-work-with-completablefuture)
+  - [`thenAccept()`](#thenaccept-vs-thenacceptasync)
+  - [`thenAcceptAsync()`](#thenaccept-vs-thenacceptasync)
+  - `thenAcceptBoth()`
+  - [`thenAcceptBothAsync()`](#consuming-two-results-with-thenacceptbothasync)
+  - [`thenApply()`](#transforming-a-result-with-thenapply)
+  - [`thenApplyAsync()`](#thenapply-vs-thenapplyasync)
+  - [`thenCombine()`](#combining-results-from-independent-futures-with-thencombine)
+  - [`thenCombineAsync()`](#thencombine-vs-thencombineasync)
+  - [`thenAcceptBothAsync()` vs `thenCombineAsync()`](#thenacceptbothasync-vs-thencombineasync)
+  - [`thenCompose()`](#composing-dependent-futures-with-thencompose)
+  - [`thenComposeAsync()`](#thencompose-vs-thencomposeasync)
+  - [`orTimeout()`](#failing-a-future-on-timeout-with-ortimeout)
+  - [`completeOnTimeout()`](#providing-a-fallback-value-with-completeontimeout)
+  - `complete()`
+  - [`completeAsync()`](#completing-a-future-asynchronously-with-completeasync)
+  - [`exceptionally()`](#recovering-with-exceptionally)
+  - [`exceptionallyAsync()`](#recovering-asynchronously-with-exceptionallyasync)
+
+## Running a Task with `supplyAsync()`
+
+`supplyAsync()` accepts a `Supplier<T>` that produces a value and returns a
+`CompletableFuture<T>` representing that result. Calling `get()` waits for the
+value and blocks the caller until the task is completed.
 
 ```java
 package com.advancejavatutorials;
@@ -55,6 +83,62 @@ Task Output: 10
 
 Some other work is in progress...
 
+```
+
+## Running a Task with `runAsync()`
+
+Use `runAsync()` when a task does not need to return a value. It accepts a
+`Runnable` and returns a `CompletableFuture<Void>`. Call `join()` when the
+current thread needs to wait for the task to finish.
+
+```java
+package com.advancejavatutorials;
+
+import java.util.concurrent.CompletableFuture;
+
+public class Main {
+    static void main() {
+        CompletableFuture.runAsync(() ->
+            System.out.println("Task is running asynchronously.")
+        ).join();
+
+        System.out.println("Task has completed.");
+    }
+}
+```
+
+Output:
+
+```txt
+Task is running asynchronously.
+Task has completed.
+```
+
+## Completing a Future Asynchronously with `completeAsync()`
+
+Use `completeAsync()` to complete an incomplete future with a value produced
+by a `Supplier` running asynchronously. It returns the same future, which can
+be awaited with `join()`.
+
+```java
+package com.advancejavatutorials;
+
+import java.util.concurrent.CompletableFuture;
+
+public class Main {
+    static void main() {
+        var future = new CompletableFuture<String>();
+        future.completeAsync(() -> "Task result");
+
+        System.out.println(future.join());
+    }
+}
+```
+
+Output:
+
+```txt
+Task result
 ```
 
 ## Chaining Asynchronous Work with `CompletableFuture`
@@ -353,6 +437,35 @@ Output:
 NAV: ₹118.66
 ```
 
+## Consuming Two Results with `thenAcceptBothAsync()`
+
+Use `thenAcceptBothAsync()` when an action needs the results of two futures.
+After both complete normally, it runs a `BiConsumer` asynchronously and returns
+a `CompletableFuture<Void>` because the action does not produce a result.
+
+```java
+package com.advancejavatutorials;
+
+import java.util.concurrent.CompletableFuture;
+
+public class Main {
+    static void main() {
+        var name = CompletableFuture.completedFuture("Ada");
+        var greeting = CompletableFuture.completedFuture("Hello");
+
+        name.thenAcceptBothAsync(greeting, (person, message) ->
+            System.out.println(message + ", " + person + "!")
+        ).join();
+    }
+}
+```
+
+Output:
+
+```txt
+Hello, Ada!
+```
+
 ## Waiting for Multiple Tasks with `CompletableFuture.allOf()`
 
 Use `allOf()` when several independent futures must finish before the program
@@ -532,6 +645,47 @@ Output:
 20.0
 ```
 
+## Failing a Future on Timeout with `orTimeout()`
+
+Use `orTimeout()` to complete a future exceptionally with a
+`TimeoutException` if it does not complete within the given duration. Unlike
+`completeOnTimeout()`, it does not provide a fallback value. The timeout does
+not cancel or interrupt the underlying task.
+
+```java
+package com.advancejavatutorials;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.TimeUnit;
+
+public class Main {
+    static void main() {
+        var future = CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(1_000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException(e);
+            }
+            return "Task result";
+        }).orTimeout(100, TimeUnit.MILLISECONDS);
+
+        try {
+            System.out.println(future.join());
+        } catch (CompletionException ex) {
+            System.out.println(ex.getCause().getClass().getSimpleName());
+        }
+    }
+}
+```
+
+Output:
+
+```txt
+TimeoutException
+```
+
 ## Handling Exceptions in `CompletableFuture`
 
 If an asynchronous task throws an exception, its future completes exceptionally.
@@ -621,6 +775,34 @@ Output:
 
 ```txt
 false
+```
+
+### Recovering Asynchronously with `exceptionallyAsync()`
+
+Use `exceptionallyAsync()` to apply a fallback function asynchronously when the
+preceding stage fails. It is available since Java 12; an overload accepts an
+`Executor` for choosing where the recovery action runs.
+
+```java
+package com.advancejavatutorials;
+
+import java.util.concurrent.CompletableFuture;
+
+public class Main {
+    static void main() {
+        var future = CompletableFuture.<Integer>failedFuture(
+            new IllegalStateException("Task failed")
+        ).exceptionallyAsync(ex -> 0);
+
+        System.out.println(future.join());
+    }
+}
+```
+
+Output:
+
+```txt
+0
 ```
 
 ## Choosing Between `CompletableFuture` Continuations
@@ -797,6 +979,49 @@ thenCombine action: main
 thenCombine result: 15
 thenCombineAsync action: async-worker
 thenCombineAsync result: 15
+```
+
+### `thenAcceptBothAsync()` vs `thenCombineAsync()`
+
+Both methods wait for two futures to complete and then run an asynchronous
+callback. `thenAcceptBothAsync()` takes a `BiConsumer`, so it can use both
+values for an action but does not produce a value; its returned future is a
+`CompletableFuture<Void>`. `thenCombineAsync()` takes a `BiFunction` and
+completes with the function's result in a `CompletableFuture<R>`. Both methods
+also have overloads that accept an `Executor`.
+
+Use `thenAcceptBothAsync()` for a side effect that needs both values. Use
+`thenCombineAsync()` when the two values should be transformed into a result
+for a later stage.
+
+```java
+import java.util.concurrent.CompletableFuture;
+
+public class Main {
+    public static void main(String[] args) {
+        var first = CompletableFuture.completedFuture(10);
+        var second = CompletableFuture.completedFuture(5);
+
+        CompletableFuture<Void> consumed = first.thenAcceptBothAsync(
+            second,
+            (left, right) -> System.out.println("Consumed sum: " + (left + right))
+        );
+        CompletableFuture<Integer> combined = first.thenCombineAsync(
+            second,
+            Integer::sum
+        );
+
+        consumed.join();
+        System.out.println("Combined result: " + combined.join());
+    }
+}
+```
+
+Output:
+
+```txt
+Consumed sum: 15
+Combined result: 15
 ```
 
 ### `thenCompose()` vs `thenComposeAsync()`
