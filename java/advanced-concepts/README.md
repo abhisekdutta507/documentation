@@ -22,3 +22,4 @@ development discussions.
 
 - [Threads](/java/advanced-concepts/thread/README.md)
 - [Thread Pools](/java/advanced-concepts/thread-pool/README.md)
+- [Completable Future](/java/advanced-concepts/completable-future/README.md)
